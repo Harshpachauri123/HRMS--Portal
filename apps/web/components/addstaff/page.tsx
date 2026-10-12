@@ -62,19 +62,238 @@ const documentGroups = [
   },
 ] as const
 
+type StaffDetails = {
+  // 1. Personal & Contact
+  name: string
+  staffId: string
+  fatherName: string
+  contactNumber: string
+  email: string
+  maritalStatus: string
+  nationality: string
+  qualification: string
+  permanentAddress: string
+
+  // 2. Role & Employment
+  department: string
+  designation: string
+  employeeType: string
+  joiningDate: string
+
+  // 3. Identity & KYC
+  aadharNo: string
+  panNo: string
+
+  // 4. Bank Account Details
+  accountNo: string
+  ifscCode: string
+  branchName: string
+}
+
+type FormFieldConfig = {
+  name: keyof StaffDetails
+  label: string
+  type: string
+  placeholder: string
+  autoComplete?: string
+  colSpan?: boolean
+  helperText?: string
+  maxLength?: number
+  pattern?: string
+  inputMode?: "text" | "numeric" | "tel" | "email"
+}
+
+type FieldGroup = {
+  title: string
+  fields: FormFieldConfig[]
+}
+
+const fieldGroups: FieldGroup[] = [
+  {
+    title: "1. Personal & Contact Details",
+    fields: [
+      {
+        name: "name",
+        label: "Employee full name",
+        type: "text",
+        placeholder: "Enter full name as per official documents",
+        autoComplete: "name",
+        colSpan: true,
+      },
+      {
+        name: "staffId",
+        label: "Staff ID",
+        type: "text",
+        placeholder: "e.g. STF-1001 or EMP-101",
+      },
+      {
+        name: "fatherName",
+        label: "Father's name",
+        type: "text",
+        placeholder: "Enter father's full name",
+      },
+      {
+        name: "contactNumber",
+        label: "Contact number",
+        type: "tel",
+        inputMode: "numeric",
+        placeholder: "10-digit mobile number",
+        autoComplete: "tel",
+        pattern: "[6-9][0-9]{9}",
+        helperText: "Enter a 10-digit Indian mobile number.",
+      },
+      {
+        name: "email",
+        label: "Email address",
+        type: "email",
+        placeholder: "employee@company.com",
+        autoComplete: "email",
+      },
+      {
+        name: "maritalStatus",
+        label: "Marital status",
+        type: "text",
+        placeholder: "Single, Married, Divorced, etc.",
+      },
+      {
+        name: "nationality",
+        label: "Nationality",
+        type: "text",
+        placeholder: "e.g. Indian",
+      },
+      {
+        name: "qualification",
+        label: "Highest qualification",
+        type: "text",
+        placeholder: "e.g. B.Tech, MBA, MCA, B.Com",
+      },
+      {
+        name: "permanentAddress",
+        label: "Permanent address",
+        type: "text",
+        placeholder: "Complete residential address with City, State & PIN code",
+        colSpan: true,
+        autoComplete: "street-address",
+      },
+    ],
+  },
+  {
+    title: "2. Role & Employment Details",
+    fields: [
+      {
+        name: "department",
+        label: "Department",
+        type: "text",
+        placeholder: "HR, IT, Sales, Marketing, etc.",
+      },
+      {
+        name: "designation",
+        label: "Designation",
+        type: "text",
+        placeholder: "HR Manager, Software Engineer, Sales Associate, etc.",
+      },
+      {
+        name: "employeeType",
+        label: "Employee type",
+        type: "text",
+        placeholder: "Full-time, Part-time, Contract, Internship",
+      },
+      {
+        name: "joiningDate",
+        label: "Joining date",
+        type: "date",
+        placeholder: "",
+      },
+    ],
+  },
+  {
+    title: "3. Identity & Statutory (KYC)",
+    fields: [
+      {
+        name: "aadharNo",
+        label: "Aadhaar number",
+        type: "text",
+        inputMode: "numeric",
+        placeholder: "12-digit Aadhaar number",
+        maxLength: 14,
+        helperText: "12-digit UIDAI identity number.",
+      },
+      {
+        name: "panNo",
+        label: "PAN card number",
+        type: "text",
+        placeholder: "10-character PAN (e.g. ABCDE1234F)",
+        maxLength: 10,
+        helperText: "Permanent Account Number.",
+      },
+    ],
+  },
+  {
+    title: "4. Bank Account Details",
+    fields: [
+      {
+        name: "accountNo",
+        label: "Bank account number",
+        type: "text",
+        placeholder: "Enter salary bank account number",
+        maxLength: 20,
+      },
+      {
+        name: "ifscCode",
+        label: "IFSC code",
+        type: "text",
+        placeholder: "e.g. SBIN0001234",
+        maxLength: 11,
+        helperText: "11-character bank branch IFSC code.",
+      },
+      {
+        name: "branchName",
+        label: "Branch name",
+        type: "text",
+        placeholder: "Bank branch name & city",
+        colSpan: true,
+      },
+    ],
+  },
+]
+
+function readDetails(formData: FormData): StaffDetails {
+  return {
+    name: String(formData.get("name") ?? "").trim(),
+    staffId: String(formData.get("staffId") ?? "").trim(),
+    fatherName: String(formData.get("fatherName") ?? "").trim(),
+    contactNumber: String(formData.get("contactNumber") ?? "").trim(),
+    email: String(formData.get("email") ?? "").trim(),
+    maritalStatus: String(formData.get("maritalStatus") ?? "").trim(),
+    nationality: String(formData.get("nationality") ?? "").trim(),
+    qualification: String(formData.get("qualification") ?? "").trim(),
+    permanentAddress: String(formData.get("permanentAddress") ?? "").trim(),
+    department: String(formData.get("department") ?? "").trim(),
+    designation: String(formData.get("designation") ?? "").trim(),
+    employeeType: String(formData.get("employeeType") ?? "").trim(),
+    joiningDate: String(formData.get("joiningDate") ?? "").trim(),
+    aadharNo: String(formData.get("aadharNo") ?? "").trim(),
+    panNo: String(formData.get("panNo") ?? "").trim(),
+    accountNo: String(formData.get("accountNo") ?? "").trim(),
+    ifscCode: String(formData.get("ifscCode") ?? "").trim(),
+    branchName: String(formData.get("branchName") ?? "").trim(),
+  }
+}
+
 type DocumentUploadProps = {
   id: string
   label: string
+  file?: File | null
+  onFileChange: (file: File | null) => void
 }
 
-type EmployeeReview = {
-  details: { label: string; value: string }[]
-  documents: { label: string; fileName: string; size: number }[]
-}
-
-function DocumentUpload({ id, label }: DocumentUploadProps) {
+function DocumentUpload({
+  id,
+  label,
+  file,
+  onFileChange,
+}: DocumentUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null)
-  const [file, setFile] = useState<File | null>(null)
   const [error, setError] = useState("")
   const [previewUrl, setPreviewUrl] = useState("")
 
@@ -106,11 +325,11 @@ function DocumentUpload({ id, label }: DocumentUploadProps) {
       return
     }
 
-    setFile(selectedFile)
+    onFileChange(selectedFile)
   }
 
   function removeFile() {
-    setFile(null)
+    onFileChange(null)
     setError("")
   }
 
@@ -142,7 +361,7 @@ function DocumentUpload({ id, label }: DocumentUploadProps) {
         ) : (
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-500">
             {file ? (
-              <FileText className="h-5 w-5" />
+              <FileText className="h-5 w-5 text-indigo-700" />
             ) : (
               <Upload className="h-5 w-5" />
             )}
@@ -193,32 +412,24 @@ export default function AddStaffPage() {
   const [step, setStep] = useState<"editing" | "review" | "submitted">(
     "editing"
   )
-  const [review, setReview] = useState<EmployeeReview | null>(null)
+  const [details, setDetails] = useState<StaffDetails | null>(null)
+  const [documents, setDocuments] = useState<Record<string, File>>({})
+
+  function handleDocumentChange(id: string, file: File | null) {
+    setDocuments((prev) => {
+      const next = { ...prev }
+      if (file) {
+        next[id] = file
+      } else {
+        delete next[id]
+      }
+      return next
+    })
+  }
 
   function handleReview(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    const formData = new FormData(event.currentTarget)
-    const details = [
-      { label: "Employee full name", name: "name" },
-      { label: "Father's name", name: "fatherName" },
-      { label: "Contact number", name: "contactNumber" },
-      { label: "Email address", name: "email" },
-      { label: "Department", name: "department" },
-      { label: "Designation", name: "designation" },
-    ].map(({ label, name }) => ({
-      label,
-      value: String(formData.get(name) ?? "").trim(),
-    }))
-    const documents = documentGroups.flatMap((group) =>
-      group.documents.flatMap((document) => {
-        const file = formData.get(document.id)
-        return file instanceof File && file.size > 0
-          ? [{ label: document.label, fileName: file.name, size: file.size }]
-          : []
-      })
-    )
-
-    setReview({ details, documents })
+    setDetails(readDetails(new FormData(event.currentTarget)))
     setStep("review")
   }
 
@@ -271,7 +482,7 @@ export default function AddStaffPage() {
               </h1>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-indigo-100/75">
                 {step === "editing"
-                  ? "Enter their personal details and attach the documents needed to complete their employee profile."
+                  ? "Enter their personal details, KYC, bank information and attach the documents needed to complete their employee profile."
                   : step === "review"
                     ? "Review the details and documents before submitting the employee form."
                     : "The employee form has been submitted successfully."}
@@ -308,174 +519,60 @@ export default function AddStaffPage() {
                     Personal information
                   </h2>
                   <p className="mt-1 text-sm text-slate-500">
-                    Basic details used to identify and contact the employee.
+                    Basic details, KYC, and bank information for employee records.
                   </p>
                 </div>
               </div>
-              <div className="grid gap-x-5 gap-y-5 px-5 py-6 sm:grid-cols-2 sm:px-7">
-                <div className="sm:col-span-2">
-                  <label
-                    htmlFor="employee-name"
-                    className="mb-2 block text-sm font-semibold text-slate-700"
+
+              <div className="space-y-6 p-5 sm:p-7">
+                {fieldGroups.map((group, groupIndex) => (
+                  <div
+                    key={group.title}
+                    className={
+                      groupIndex > 0 ? "border-t border-slate-100 pt-6" : ""
+                    }
                   >
-                    Employee full name <span className="text-rose-500">*</span>
-                  </label>
-                  <input
-                    id="employee-name"
-                    name="name"
-                    type="text"
-                    autoComplete="name"
-                    required
-                    maxLength={120}
-                    placeholder="Enter full name as per ID proof"
-                    className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-900 transition outline-none placeholder:text-slate-400 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
-                  />
-                </div>
-                <div className="sm:col-span-2">
-                  <label
-                    htmlFor="Staff-Id"
-                    className="mb-2 block text-sm font-semibold text-slate-700"
-                  >
-                    Staff ID <span className="text-rose-500">*</span>
-                  </label>
-                  <input
-                    id="Staff-Id"
-                    name="staffId"
-                    type="text"
-                    required
-                    maxLength={120}
-                    placeholder="Enter staff ID"
-                    className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-900 transition outline-none placeholder:text-slate-400 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
-                  />
-                </div>
-                <div className="sm:col-span-2">
-                  <label
-                    htmlFor="father-name"
-                    className="mb-2 block text-sm font-semibold text-slate-700"
-                  >
-                    Father&apos;s name <span className="text-rose-500">*</span>
-                  </label>
-                  <input
-                    id="father-name"
-                    name="fatherName"
-                    type="text"
-                    required
-                    maxLength={120}
-                    placeholder="Enter father's full name"
-                    className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-900 transition outline-none placeholder:text-slate-400 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="contact-number"
-                    className="mb-2 block text-sm font-semibold text-slate-700"
-                  >
-                    Contact number <span className="text-rose-500">*</span>
-                  </label>
-                  <input
-                    id="contact-number"
-                    name="contactNumber"
-                    type="tel"
-                    inputMode="numeric"
-                    autoComplete="tel"
-                    required
-                    pattern="[6-9][0-9]{9}"
-                    title="Enter a valid 10-digit Indian mobile number"
-                    placeholder="10-digit mobile number"
-                    className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-900 transition outline-none placeholder:text-slate-400 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
-                  />
-                  <p className="mt-1.5 text-xs text-slate-500">
-                    Enter a 10-digit Indian mobile number.
-                  </p>
-                </div>
-                <div>
-                  <label
-                    htmlFor="email"
-                    className="mb-2 block text-sm font-semibold text-slate-700"
-                  >
-                    Email address <span className="text-rose-500">*</span>
-                  </label>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    maxLength={254}
-                    placeholder="employee@company.com"
-                    className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-900 transition outline-none placeholder:text-slate-400 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
-                  />
-                </div>
-                <div className="sm:col-span-2">
-                  <label
-                    htmlFor="Joining-date"
-                    className="mb-2 block text-sm font-semibold text-slate-700"
-                  >
-                    Joining Date <span className="text-rose-500">*</span>
-                  </label>
-                  <input
-                    id="Joining-date"
-                    name="joiningDate"
-                    type="date"
-                    required
-                    maxLength={120}
-                    placeholder="Enter joining date"
-                    className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-900 transition outline-none placeholder:text-slate-400 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
-                  />
-                </div>
-                <div className="sm:col-span-2">
-                  <label
-                    htmlFor="Employee-type"
-                    className="mb-2 block text-sm font-semibold text-slate-700"
-                  >
-                    Employee Type <span className="text-rose-500">*</span>
-                  </label>
-                  <input
-                    id="Employee-type"
-                    name="employeeType"
-                    type="text"
-                    required
-                    maxLength={120}
-                    placeholder="Enter employee type (e.g., Full-time, Part-time, Contract, Internship)"
-                    className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-900 transition outline-none placeholder:text-slate-400 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="department"
-                    className="mb-2 block text-sm font-semibold text-slate-700"
-                  >
-                    Department <span className="text-rose-500">*</span>
-                  </label>
-                  <input
-                    id="department"
-                    name="department"
-                    type="text"
-                    autoComplete="department"
-                    required
-                    maxLength={100}
-                    placeholder="HR, IT, Sales, etc."
-                    className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-900 transition outline-none placeholder:text-slate-400 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="designation"
-                    className="mb-2 block text-sm font-semibold text-slate-700"
-                  >
-                    Designation <span className="text-rose-500">*</span>
-                  </label>
-                  <input
-                    id="designation"
-                    name="designation"
-                    type="text"
-                    autoComplete="designation"
-                    required
-                    maxLength={254}
-                    placeholder="HR Manager, Software Engineer, Sales Associate, etc."
-                    className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-900 transition outline-none placeholder:text-slate-400 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
-                  />
-                </div>
+                    <div className="mb-4 flex items-center gap-2">
+                      <span className="h-2 w-2 rounded-full bg-indigo-600" />
+                      <h3 className="text-xs font-bold tracking-wider text-indigo-900 uppercase">
+                        {group.title}
+                      </h3>
+                    </div>
+                    <div className="grid gap-x-5 gap-y-5 sm:grid-cols-2">
+                      {group.fields.map((field) => (
+                        <div
+                          key={field.name}
+                          className={field.colSpan ? "sm:col-span-2" : ""}
+                        >
+                          <label
+                            htmlFor={`staff-${field.name}`}
+                            className="mb-2 block text-sm font-semibold text-slate-700"
+                          >
+                            {field.label}{" "}
+                            <span className="text-rose-500">*</span>
+                          </label>
+                          <input
+                            id={`staff-${field.name}`}
+                            name={field.name}
+                            type={field.type}
+                            autoComplete={field.autoComplete}
+                            required
+                            maxLength={field.maxLength ?? 254}
+                            pattern={field.pattern}
+                            inputMode={field.inputMode}
+                            placeholder={field.placeholder}
+                            className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-900 transition outline-none placeholder:text-slate-400 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
+                          />
+                          {field.helperText ? (
+                            <p className="mt-1.5 text-xs text-slate-500">
+                              {field.helperText}
+                            </p>
+                          ) : null}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </div>
             </motion.section>
 
@@ -508,6 +605,10 @@ export default function AddStaffPage() {
                         key={document.id}
                         id={document.id}
                         label={document.label}
+                        file={documents[document.id] ?? null}
+                        onFileChange={(file) =>
+                          handleDocumentChange(document.id, file)
+                        }
                       />
                     ))}
                   </div>
@@ -521,7 +622,7 @@ export default function AddStaffPage() {
             >
               <p className="text-xs text-slate-500">
                 Fields marked <span className="font-bold text-rose-500">*</span>{" "}
-                are required.
+                are required. Documents are optional.
               </p>
               <div className="flex flex-col-reverse gap-2 sm:flex-row">
                 <Link
@@ -558,16 +659,16 @@ export default function AddStaffPage() {
                 {[
                   {
                     title: "Personal information",
-                    detail: "Contact and identity details",
+                    detail: "Personal, KYC & bank details",
                     icon: UserRound,
                   },
                   {
-                    title: "Identity & bank",
+                    title: "Identity & bank docs",
                     detail: "Aadhaar, PAN and passbook",
                     icon: Landmark,
                   },
                   {
-                    title: "Education",
+                    title: "Education certificates",
                     detail: "School and degree marksheets",
                     icon: GraduationCap,
                   },
@@ -575,7 +676,7 @@ export default function AddStaffPage() {
                   const Icon = item.icon
                   return (
                     <li key={item.title} className="flex items-center gap-3">
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-500">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-100 text-indigo-700">
                         <Icon className="h-4 w-4" />
                       </span>
                       <span>
@@ -604,7 +705,7 @@ export default function AddStaffPage() {
               </p>
               <div className="mt-4 flex items-start gap-2 border-t border-indigo-200/70 pt-3 text-xs leading-5 text-indigo-900/75">
                 <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-indigo-700" />
-                Files stay in this form and are not saved by this page.
+                Files stay in this form and are not persisted.
               </div>
             </section>
 
@@ -616,7 +717,7 @@ export default function AddStaffPage() {
           </motion.aside>
         </motion.div>
 
-        {step === "review" && review ? (
+        {step === "review" && details ? (
           <motion.div
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
@@ -629,25 +730,46 @@ export default function AddStaffPage() {
                 </span>
                 <div>
                   <h2 className="text-base font-bold text-slate-900">
-                    Personal information
+                    Employee information
                   </h2>
                   <p className="mt-1 text-sm text-slate-500">
-                    Review all employee information before submitting.
+                    Review all employee details before submitting.
                   </p>
                 </div>
               </div>
-              <dl className="grid gap-5 p-5 sm:grid-cols-2 sm:p-7">
-                {review.details.map((detail) => (
-                  <div key={detail.label}>
-                    <dt className="text-xs font-semibold tracking-wide text-slate-500 uppercase">
-                      {detail.label}
-                    </dt>
-                    <dd className="mt-1.5 text-sm font-medium break-words text-slate-900">
-                      {detail.value}
-                    </dd>
+
+              <div className="space-y-6 p-5 sm:p-7">
+                {fieldGroups.map((group, groupIndex) => (
+                  <div
+                    key={group.title}
+                    className={
+                      groupIndex > 0 ? "border-t border-slate-100 pt-6" : ""
+                    }
+                  >
+                    <div className="mb-4 flex items-center gap-2">
+                      <span className="h-2 w-2 rounded-full bg-indigo-600" />
+                      <h3 className="text-xs font-bold tracking-wider text-indigo-900 uppercase">
+                        {group.title}
+                      </h3>
+                    </div>
+                    <dl className="grid gap-5 sm:grid-cols-2">
+                      {group.fields.map((field) => (
+                        <div
+                          key={field.name}
+                          className={field.colSpan ? "sm:col-span-2" : ""}
+                        >
+                          <dt className="text-xs font-semibold tracking-wide text-slate-500 uppercase">
+                            {field.label}
+                          </dt>
+                          <dd className="mt-1.5 text-sm font-medium break-words text-slate-900">
+                            {details[field.name] || "—"}
+                          </dd>
+                        </div>
+                      ))}
+                    </dl>
                   </div>
                 ))}
-              </dl>
+              </div>
             </section>
 
             {documentGroups.map((group) => {
@@ -672,9 +794,7 @@ export default function AddStaffPage() {
                   </div>
                   <ul className="grid gap-3 p-5 sm:grid-cols-2 sm:p-7">
                     {group.documents.map((document) => {
-                      const uploadedDocument = review.documents.find(
-                        (item) => item.label === document.label
-                      )
+                      const uploadedFile = documents[document.id]
                       return (
                         <li
                           key={document.id}
@@ -682,12 +802,12 @@ export default function AddStaffPage() {
                         >
                           <span
                             className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${
-                              uploadedDocument
+                              uploadedFile
                                 ? "bg-emerald-50 text-emerald-700"
                                 : "bg-slate-100 text-slate-400"
                             }`}
                           >
-                            {uploadedDocument ? (
+                            {uploadedFile ? (
                               <Check className="h-4 w-4" />
                             ) : (
                               <FileText className="h-4 w-4" />
@@ -697,11 +817,11 @@ export default function AddStaffPage() {
                             <span className="block text-sm font-semibold text-slate-800">
                               {document.label}
                             </span>
-                            {uploadedDocument ? (
+                            {uploadedFile ? (
                               <span className="mt-0.5 block truncate text-xs text-slate-500">
-                                {uploadedDocument.fileName} ·{" "}
+                                {uploadedFile.name} ·{" "}
                                 {(
-                                  uploadedDocument.size /
+                                  uploadedFile.size /
                                   (1024 * 1024)
                                 ).toFixed(2)}{" "}
                                 MB

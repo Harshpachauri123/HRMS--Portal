@@ -24,7 +24,7 @@ const Main = [
     icon: ClipboardList,
   },
   {
-    href: "/Candidates",
+    href: "/candidates",
     label: "Candidates Management",
     icon: ClipboardList,
   },

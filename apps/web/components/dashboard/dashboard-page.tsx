@@ -386,7 +386,7 @@ export default function DashboardPage() {
                 icon: PlusCircle,
                 href: undefined,
               },
-              { label: "Add Candidate", icon: UserPlus, href: undefined },
+              { label: "Add Candidate", icon: UserPlus, href: "/addcandidate" },
               {
                 label: "Generate Offer Letter",
                 icon: FileSignature,
