@@ -1,24 +1,18 @@
 'use client';
 
-import { useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { KeyRound, UserRound } from 'lucide-react';
-import { useAuth } from '@/hooks/use-auth';
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { user, isLoaded } = useAuth();
 
-  useEffect(() => {
-    if (isLoaded && !user) {
-      router.replace('/sign-in');
-    }
-  }, [isLoaded, router, user]);
-
-  if (!user) {
-    return <div className="mx-auto max-w-3xl p-6 text-sm text-slate-600">Loading profile...</div>;
-  }
+  // Mock user data (replace or adapt as needed since useAuth was removed)
+  const user = {
+    name: 'John Doe',
+    email: 'john.doe@example.com',
+    role: 'ADMIN',
+  };
 
   return (
     <section className="mx-auto max-w-3xl space-y-6">

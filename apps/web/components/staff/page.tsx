@@ -439,7 +439,7 @@ export default function StaffPage() {
               className="inline-flex h-11 cursor-pointer items-center justify-center gap-2 self-start rounded-xl bg-white px-5 text-sm font-bold text-indigo-950 shadow-lg shadow-black/10 transition hover:bg-indigo-50 sm:self-auto"
             >
               <Plus className="h-4 w-4" />
-              Add Staff
+              Add Employee
             </Link>
           </div>
         </motion.header>

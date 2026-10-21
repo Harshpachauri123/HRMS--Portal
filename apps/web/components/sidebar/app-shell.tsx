@@ -20,7 +20,7 @@ const Main = [
   },
   {
     href: "/staff",
-    label: "Staff Management",
+    label: "Employees Management",
     icon: ClipboardList,
   },
   {
