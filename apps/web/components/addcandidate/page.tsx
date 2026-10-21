@@ -57,7 +57,8 @@ const documentGroups = [
 
 type CandidateDetails = {
   // 1. Personal & Contact
-  name: string
+  firstname: string
+  lastname: string
   candidateId: string
   fatherName: string
   contactNumber: string
@@ -65,6 +66,7 @@ type CandidateDetails = {
   maritalStatus: string
   nationality: string
   qualification: string
+  dateofbirth: string
   permanentAddress: string
 
   // 2. Role & Employment
@@ -275,7 +277,8 @@ const fieldGroups: FieldGroup[] = [
 
 function readDetails(formData: FormData): CandidateDetails {
   return {
-    name: String(formData.get("name") ?? "").trim(),
+    firstname: String(formData.get("firstname") ?? "").trim(),
+    lastname: String(formData.get("lastname") ?? "").trim(),
     candidateId: String(formData.get("candidateId") ?? "").trim(),
     fatherName: String(formData.get("fatherName") ?? "").trim(),
     contactNumber: String(formData.get("contactNumber") ?? "").trim(),
@@ -283,6 +286,7 @@ function readDetails(formData: FormData): CandidateDetails {
     maritalStatus: String(formData.get("maritalStatus") ?? "").trim(),
     nationality: String(formData.get("nationality") ?? "").trim(),
     qualification: String(formData.get("qualification") ?? "").trim(),
+    dateofbirth: String(formData.get("dateofbirth") ?? "").trim(),
     permanentAddress: String(formData.get("permanentAddress") ?? "").trim(),
     department: String(formData.get("department") ?? "").trim(),
     designation: String(formData.get("designation") ?? "").trim(),

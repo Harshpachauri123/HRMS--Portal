@@ -64,14 +64,16 @@ const documentGroups = [
 
 type StaffDetails = {
   // 1. Personal & Contact
-  name: string
-  staffId: string
+  firstname: string
+  lastname: string
+  employeeId: string
   fatherName: string
   contactNumber: string
   email: string
   maritalStatus: string
   nationality: string
   qualification: string
+  dateofbirth: string
   permanentAddress: string
 
   // 2. Role & Employment
@@ -282,14 +284,16 @@ const fieldGroups: FieldGroup[] = [
 
 function readDetails(formData: FormData): StaffDetails {
   return {
-    name: String(formData.get("name") ?? "").trim(),
-    staffId: String(formData.get("staffId") ?? "").trim(),
+    firstname: String(formData.get("firstname") ?? "").trim(),
+    lastname: String(formData.get("lastname") ?? "").trim(),
+    employeeId: String(formData.get("employeeId") ?? "").trim(),
     fatherName: String(formData.get("fatherName") ?? "").trim(),
     contactNumber: String(formData.get("contactNumber") ?? "").trim(),
     email: String(formData.get("email") ?? "").trim(),
     maritalStatus: String(formData.get("maritalStatus") ?? "").trim(),
     nationality: String(formData.get("nationality") ?? "").trim(),
     qualification: String(formData.get("qualification") ?? "").trim(),
+    dateofbirth: String(formData.get("dateofbirth") ?? "").trim(),
     permanentAddress: String(formData.get("permanentAddress") ?? "").trim(),
     department: String(formData.get("department") ?? "").trim(),
     designation: String(formData.get("designation") ?? "").trim(),
