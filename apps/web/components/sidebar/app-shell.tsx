@@ -28,6 +28,11 @@ const Main = [
     label: "Candidates Management",
     icon: ClipboardList,
   },
+   {
+    href: "/attendance",
+    label: "Attendance Management",
+    icon: ClipboardList,
+  },
 ];
 
 const sidebarLogoUrl =
@@ -103,6 +108,15 @@ function SidebarContentBody({
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = React.useState(false);
+  const pathname = usePathname();
+
+  if (
+    pathname.startsWith("/sign-in") ||
+    pathname.startsWith("/sign-up") ||
+    pathname === "/forgot-password"
+  ) {
+    return <>{children}</>;
+  }
 
   return (
     <div className="min-h-screen bg-slate-50">

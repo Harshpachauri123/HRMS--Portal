@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { QueryProvider } from "@/components/providers/query-provider";
 import { AppShell } from "@/components/sidebar/app-shell";
 import "./globals.css";
 
@@ -21,9 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <QueryProvider>
           <AppShell>{children}</AppShell>
-        </QueryProvider>
       </body>
     </html>
   );

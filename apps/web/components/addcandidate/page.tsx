@@ -41,22 +41,7 @@ const acceptedFileTypes = new Set([
 const maxFileSize = 10 * 1024 * 1024
 
 const documentGroups = [
-  {
-    title: "Identity documents",
-    description: "Upload clear photos or scans of the candidate's ID proofs.",
-    icon: ShieldCheck,
-    documents: [
-      { id: "aadhaar-front", label: "Aadhaar card — front side" },
-      { id: "aadhaar-back", label: "Aadhaar card — back side" },
-      { id: "pan-card", label: "PAN card" },
-    ],
-  },
-  {
-    title: "Bank details",
-    description: "A passbook scan helps verify salary account information.",
-    icon: Landmark,
-    documents: [{ id: "passbook", label: "Bank passbook" }],
-  },
+ 
   {
     title: "Education certificates",
     description: "Add available marksheets in PDF, JPG, PNG, or WebP format.",
