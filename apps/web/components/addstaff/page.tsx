@@ -95,6 +95,7 @@ type FormFieldConfig = {
   label: string
   type: string
   placeholder: string
+  options?: string[]
   autoComplete?: string
   colSpan?: boolean
   helperText?: string
@@ -113,18 +114,26 @@ const fieldGroups: FieldGroup[] = [
     title: "1. Personal & Contact Details",
     fields: [
       {
-        name: "name",
-        label: "Employee full name",
+        name: "firstname",
+        label: "First name",
         type: "text",
-        placeholder: "Enter full name as per official documents",
-        autoComplete: "name",
+        placeholder: "Enter first name",
+        autoComplete: "given-name",
         colSpan: true,
       },
       {
-        name: "staffId",
-        label: "Staff ID",
+        name: "lastname",
+        label: "Last name",
         type: "text",
-        placeholder: "e.g. STF-1001 or EMP-101",
+        placeholder: "Enter last name",
+        autoComplete: "family-name",
+        colSpan: true,
+      },
+      {
+        name: "employeeId",
+        label: "Employee ID",
+        type: "text",
+        placeholder: "e.g. SDV-001, SDV-002, etc.",
       },
       {
         name: "fatherName",
@@ -152,20 +161,34 @@ const fieldGroups: FieldGroup[] = [
       {
         name: "maritalStatus",
         label: "Marital status",
-        type: "text",
-        placeholder: "Single, Married, Divorced, etc.",
+        type: "select",
+        placeholder: "Select marital status",
+        options: ["Married", "Unmarried", "Divorced", "Other"],
       },
       {
         name: "nationality",
         label: "Nationality",
-        type: "text",
-        placeholder: "e.g. Indian",
+        type: "select",
+        placeholder: "Select nationality",
+        options: ["Indian", "Other"],
       },
       {
         name: "qualification",
         label: "Highest qualification",
-        type: "text",
-        placeholder: "e.g. B.Tech, MBA, MCA, B.Com",
+        type: "select",
+        placeholder: "Select qualification",
+        options: [
+          "High School",
+          "Intermediate",
+          "Bachelor's Degree",
+          "Master's Degree",
+        ],
+      },
+      {
+        name: "dateofbirth",
+        label: "Date of birth",
+        type: "date",
+        placeholder: "",
       },
       {
         name: "permanentAddress",
@@ -551,6 +574,24 @@ export default function AddStaffPage() {
                             {field.label}{" "}
                             <span className="text-rose-500">*</span>
                           </label>
+                          {field.options ? (
+                            <select
+                              id={`staff-${field.name}`}
+                              name={field.name}
+                              required
+                              defaultValue=""
+                              className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-900 transition outline-none focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
+                            >
+                              <option value="" disabled>
+                                {field.placeholder}
+                              </option>
+                              {field.options.map((option) => (
+                                <option key={option} value={option}>
+                                  {option}
+                                </option>
+                              ))}
+                            </select>
+                          ) : (
                           <input
                             id={`staff-${field.name}`}
                             name={field.name}
@@ -563,6 +604,7 @@ export default function AddStaffPage() {
                             placeholder={field.placeholder}
                             className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-900 transition outline-none placeholder:text-slate-400 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
                           />
+                          )}
                           {field.helperText ? (
                             <p className="mt-1.5 text-xs text-slate-500">
                               {field.helperText}
