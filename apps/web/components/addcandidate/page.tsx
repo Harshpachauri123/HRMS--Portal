@@ -16,6 +16,10 @@ import {
   X,
 } from "lucide-react"
 import Link from "next/link"
+import {
+  saveCandidateRecord,
+  useCandidateRecords,
+} from "@/lib/session-records"
 import { MotionConfig, motion } from "motion/react"
 import {
   useEffect,
@@ -66,6 +70,7 @@ type CandidateDetails = {
   maritalStatus: string
   nationality: string
   qualification: string
+  experience: string
   dateofbirth: string
   permanentAddress: string
 
@@ -179,6 +184,18 @@ const fieldGroups: FieldGroup[] = [
           "Master's Degree",
         ],
       },
+      {
+        name: "experience",
+        label: "Total experience",
+        type: "select",
+        placeholder: "Select experience level",
+        options: [
+          "Fresher",
+          "1-2 years",
+          "3-5 years",
+          "5+ years",
+        ],
+      },
        {
         name: "dateofbirth",
         label: "Date of birth",
@@ -214,11 +231,17 @@ const fieldGroups: FieldGroup[] = [
         name: "employeeType",
         label: "Employment type",
         type: "text",
-        placeholder: "Full-time, Part-time, Contract, Internship",
+        placeholder: "Select employment type",
+        options: [
+          "Full-time",
+          "Part-time",
+          "Contract",
+          "Internship",
+        ],
       },
       {
         name: "joiningDate",
-        label: "Expected joining date",
+        label: "Application date",
         type: "date",
         placeholder: "",
       },
@@ -286,6 +309,7 @@ function readDetails(formData: FormData): CandidateDetails {
     maritalStatus: String(formData.get("maritalStatus") ?? "").trim(),
     nationality: String(formData.get("nationality") ?? "").trim(),
     qualification: String(formData.get("qualification") ?? "").trim(),
+    experience: String(formData.get("experience") ?? "").trim(),
     dateofbirth: String(formData.get("dateofbirth") ?? "").trim(),
     permanentAddress: String(formData.get("permanentAddress") ?? "").trim(),
     department: String(formData.get("department") ?? "").trim(),
@@ -535,12 +559,21 @@ function CandidateResumeUpload({
 }
 
 export default function AddCandidatePage() {
+  const candidateRecords = useCandidateRecords()
+  const [recordId, setRecordId] = useState<string | null>(null)
+  const [formReady, setFormReady] = useState(false)
   const [step, setStep] = useState<"editing" | "review" | "submitted">(
     "editing"
   )
   const [details, setDetails] = useState<CandidateDetails | null>(null)
   const [resume, setResume] = useState<File | null>(null)
   const [documents, setDocuments] = useState<Record<string, File>>({})
+  const editingRecord = candidateRecords.find((record) => record.id === recordId)
+
+  useEffect(() => {
+    setRecordId(new URLSearchParams(window.location.search).get("edit"))
+    setFormReady(true)
+  }, [])
 
   function handleDocumentChange(id: string, file: File | null) {
     setDocuments((prev) => {
@@ -558,6 +591,33 @@ export default function AddCandidatePage() {
     event.preventDefault()
     setDetails(readDetails(new FormData(event.currentTarget)))
     setStep("review")
+  }
+
+  function handleConfirm() {
+    if (!details) return
+    const documentNames = [
+      ...new Set([
+        ...(editingRecord?.documents ?? []),
+        ...(resume ? [resume.name] : []),
+        ...Object.values(documents).map((file) => file.name),
+      ]),
+    ]
+    saveCandidateRecord({ ...details }, documentNames, recordId ?? undefined)
+    setStep("submitted")
+  }
+
+  if (recordId && formReady && !editingRecord) {
+    return (
+      <main className="mx-auto max-w-2xl rounded-3xl border border-amber-200 bg-amber-50 p-6 text-center">
+        <h1 className="text-lg font-bold text-slate-900">Candidate record unavailable</h1>
+        <p className="mt-2 text-sm text-slate-600">
+          This demo record is held only for the current session. Return to the candidate list and try again.
+        </p>
+        <Link href="/candidates" className="mt-4 inline-flex font-semibold text-sky-700 hover:underline">
+          Back to candidates
+        </Link>
+      </main>
+    )
   }
 
   return (
@@ -605,7 +665,9 @@ export default function AddCandidatePage() {
               </p>
               <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
                 {step === "editing"
-                  ? "Add a candidate"
+                  ? recordId
+                    ? "Edit candidate details"
+                    : "Add a candidate"
                   : step === "review"
                     ? "Review application"
                     : "Application received"}
@@ -651,6 +713,7 @@ export default function AddCandidatePage() {
         </motion.header>
 
         <motion.form
+          key={recordId ?? "new-candidate"}
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           onSubmit={handleReview}
@@ -705,8 +768,11 @@ export default function AddCandidatePage() {
                             <select
                               id={`candidate-${field.name}`}
                               name={field.name}
-                              required
-                              defaultValue=""
+                              required={
+                                !editingRecord ||
+                                Boolean(editingRecord.details[field.name])
+                              }
+                              defaultValue={editingRecord?.details[field.name] ?? ""}
                               className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-900 transition outline-none focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
                             >
                               <option value="" disabled>
@@ -724,11 +790,15 @@ export default function AddCandidatePage() {
                               name={field.name}
                               type={field.type}
                               autoComplete={field.autoComplete}
-                              required
+                              required={
+                                !editingRecord ||
+                                Boolean(editingRecord.details[field.name])
+                              }
                               maxLength={field.maxLength ?? 254}
                               pattern={field.pattern}
                               inputMode={field.inputMode}
                               placeholder={field.placeholder}
+                              defaultValue={editingRecord?.details[field.name] ?? ""}
                               className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-900 transition outline-none placeholder:text-slate-400 focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
                             />
                           )}
@@ -1072,10 +1142,10 @@ export default function AddCandidatePage() {
               </button>
               <button
                 type="button"
-                onClick={() => setStep("submitted")}
+                onClick={handleConfirm}
                 className="inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-xl bg-sky-600 px-5 text-sm font-semibold text-white shadow-sm shadow-sky-200 transition hover:bg-sky-700 focus-visible:ring-4 focus-visible:ring-sky-200 focus-visible:outline-none"
               >
-                Confirm candidate
+                {recordId ? "Save candidate changes" : "Confirm candidate"}
                 <ArrowRight className="h-4 w-4" />
               </button>
             </div>

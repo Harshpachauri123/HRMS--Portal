@@ -121,7 +121,7 @@ export default function DashboardPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45, ease: "easeOut" }}
-          className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-950 via-indigo-950 to-violet-900 px-6 py-7 text-white shadow-xl shadow-indigo-950/15 sm:px-8 sm:py-9"
+          className="relative overflow-hidden rounded-3xl bg-linear-to-br from-slate-950 via-indigo-950 to-violet-900 px-6 py-7 text-white shadow-xl shadow-indigo-950/15 sm:px-8 sm:py-9"
         >
           <div className="pointer-events-none absolute -top-28 -right-12 h-80 w-80 rounded-full border border-white/10 bg-indigo-400/10 blur-2xl" />
           <div className="pointer-events-none absolute right-1/3 bottom-[-8rem] h-56 w-56 rounded-full bg-cyan-400/15 blur-3xl" />
@@ -147,26 +147,12 @@ export default function DashboardPage() {
                 <CalendarDays className="h-4 w-4 text-indigo-200" />
                 {today}
               </span>
-              <select
-                aria-label="Dashboard date range"
-                className="h-10 rounded-xl border border-white/20 bg-white/10 px-3 text-sm font-medium text-white shadow-sm transition outline-none focus:border-white/40 focus:ring-4 focus:ring-white/10 [&>option]:text-slate-900"
-              >
-                <option>This month</option>
-                <option>This week</option>
-                <option>This year</option>
-              </select>
-
-              <button className="inline-flex h-10 items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-3.5 text-sm font-semibold text-white shadow-sm transition hover:border-white/40 hover:bg-white/15 focus-visible:ring-4 focus-visible:ring-white/10 focus-visible:outline-none">
-                <Download className="h-4 w-4" />
-                Export
-              </button>
-
               <Link
                 href="/addstaff"
                 className="inline-flex h-10 items-center gap-2 rounded-xl bg-white px-4 text-sm font-semibold text-indigo-950 shadow-lg shadow-black/10 transition hover:bg-indigo-50 focus-visible:ring-4 focus-visible:ring-white/20 focus-visible:outline-none"
               >
                 <UserPlus className="h-4 w-4" />
-                Add Staff
+                Add Employee
               </Link>
             </div>
           </div>
@@ -380,7 +366,7 @@ export default function DashboardPage() {
           </p>
           <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {[
-              { label: "Add Staff", icon: UserPlus, href: "/addstaff" },
+              { label: "Add Employee", icon: UserPlus, href: "/addstaff" },
               {
                 label: "Create Job Opening",
                 icon: PlusCircle,

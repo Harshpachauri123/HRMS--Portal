@@ -3,7 +3,7 @@ import { AppShell } from "@/components/sidebar/app-shell";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "HRMS Portal - SDV Edutech Pvt. Ltd.",
+  title: "HR Pulse - Staff Management System",
   description:
     "A responsive municipal admin dashboard for survey, tax, cash desk, and transaction operations.",
   icons: {

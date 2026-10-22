@@ -15,6 +15,10 @@ import {
   X,
 } from "lucide-react"
 import Link from "next/link"
+import {
+  saveStaffRecord,
+  useStaffRecords,
+} from "@/lib/session-records"
 import { MotionConfig, motion } from "motion/react"
 import {
   useEffect,
@@ -436,11 +440,20 @@ function DocumentUpload({
 }
 
 export default function AddStaffPage() {
+  const staffRecords = useStaffRecords()
+  const [recordId, setRecordId] = useState<string | null>(null)
+  const [formReady, setFormReady] = useState(false)
   const [step, setStep] = useState<"editing" | "review" | "submitted">(
     "editing"
   )
   const [details, setDetails] = useState<StaffDetails | null>(null)
   const [documents, setDocuments] = useState<Record<string, File>>({})
+  const editingRecord = staffRecords.find((record) => record.id === recordId)
+
+  useEffect(() => {
+    setRecordId(new URLSearchParams(window.location.search).get("edit"))
+    setFormReady(true)
+  }, [])
 
   function handleDocumentChange(id: string, file: File | null) {
     setDocuments((prev) => {
@@ -458,6 +471,32 @@ export default function AddStaffPage() {
     event.preventDefault()
     setDetails(readDetails(new FormData(event.currentTarget)))
     setStep("review")
+  }
+
+  function handleConfirm() {
+    if (!details) return
+    const documentNames = [
+      ...new Set([
+        ...(editingRecord?.documents ?? []),
+        ...Object.values(documents).map((file) => file.name),
+      ]),
+    ]
+    saveStaffRecord({ ...details }, documentNames, recordId ?? undefined)
+    setStep("submitted")
+  }
+
+  if (recordId && formReady && !editingRecord) {
+    return (
+      <main className="mx-auto max-w-2xl rounded-3xl border border-amber-200 bg-amber-50 p-6 text-center">
+        <h1 className="text-lg font-bold text-slate-900">Employee record unavailable</h1>
+        <p className="mt-2 text-sm text-slate-600">
+          This demo record is held only for the current session. Return to the employee list and try again.
+        </p>
+        <Link href="/staff" className="mt-4 inline-flex font-semibold text-indigo-700 hover:underline">
+          Back to employees
+        </Link>
+      </main>
+    )
   }
 
   return (
@@ -502,7 +541,9 @@ export default function AddStaffPage() {
               </p>
               <h1 className="text-3xl font-bold tracking-tight text-white">
                 {step === "editing"
-                  ? "Add a new employee"
+                  ? recordId
+                    ? "Edit employee details"
+                    : "Add a new employee"
                   : step === "review"
                     ? "Review employee details"
                     : "Submission complete"}
@@ -530,7 +571,7 @@ export default function AddStaffPage() {
             step === "editing" ? "" : "hidden"
           }`}
         >
-          <form onSubmit={handleReview} className="space-y-6">
+          <form key={recordId ?? "new-employee"} onSubmit={handleReview} className="space-y-6">
             <motion.section
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
@@ -582,8 +623,11 @@ export default function AddStaffPage() {
                             <select
                               id={`staff-${field.name}`}
                               name={field.name}
-                              required
-                              defaultValue=""
+                              required={
+                                !editingRecord ||
+                                Boolean(editingRecord.details[field.name])
+                              }
+                              defaultValue={editingRecord?.details[field.name] ?? ""}
                               className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-900 transition outline-none focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
                             >
                               <option value="" disabled>
@@ -601,11 +645,15 @@ export default function AddStaffPage() {
                             name={field.name}
                             type={field.type}
                             autoComplete={field.autoComplete}
-                            required
+                            required={
+                              !editingRecord ||
+                              Boolean(editingRecord.details[field.name])
+                            }
                             maxLength={field.maxLength ?? 254}
                             pattern={field.pattern}
                             inputMode={field.inputMode}
                             placeholder={field.placeholder}
+                            defaultValue={editingRecord?.details[field.name] ?? ""}
                             className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-900 transition outline-none placeholder:text-slate-400 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
                           />
                           )}
@@ -897,10 +945,10 @@ export default function AddStaffPage() {
               </button>
               <button
                 type="button"
-                onClick={() => setStep("submitted")}
+                onClick={handleConfirm}
                 className="inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 text-sm font-semibold text-white shadow-sm shadow-indigo-200 transition hover:bg-indigo-700 focus-visible:ring-4 focus-visible:ring-indigo-200 focus-visible:outline-none"
               >
-                Submit Staff form
+                {recordId ? "Save employee changes" : "Submit Staff form"}
                 <ArrowRight className="h-4 w-4" />
               </button>
             </div>
@@ -922,8 +970,9 @@ export default function AddStaffPage() {
               Submission successful
             </p>
             <p className="mt-3 max-w-md text-sm leading-6 text-slate-500">
-              Your Staff form has been submitted successfully. The Staff profile
-              will be created and the onboarding process will begin.
+              {recordId
+                ? "The employee profile has been updated for this session."
+                : "The employee profile has been added for this session."}
             </p>
             <Link
               href="/staff"

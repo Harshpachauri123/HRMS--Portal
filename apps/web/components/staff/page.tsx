@@ -3,18 +3,29 @@
 import Link from "next/link"
 import { AnimatePresence, MotionConfig, motion } from "motion/react"
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib"
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import {
   ArrowUpRight,
   Download,
+  Eye,
   FileText,
+  Pencil,
   Plus,
   Search,
+  Trash2,
   Users,
 } from "lucide-react"
+import {
+  deleteStaffRecord,
+  saveStaffRecord,
+  useDeletedStaffDemoIds,
+  useStaffRecords,
+  type FormRecord,
+} from "@/lib/session-records"
 
 type Employee = {
-  id: number
+  id: number | string
+  isSubmitted?: boolean
   avatar: string
   color: string
   empId: string
@@ -239,7 +250,33 @@ const employeeCardThemes = [
   },
 ] as const
 
-async function downloadEmployeePdf(employee: Employee) {
+function staffDetailsFromEmployee(employee: Employee): FormRecord {
+  const [firstname = "", ...lastName] = employee.name.split(/\s+/)
+  return {
+    firstname,
+    lastname: lastName.join(" "),
+    employeeId: employee.empId,
+    fatherName: employee.fatherName,
+    contactNumber: employee.phone,
+    email: employee.email,
+    maritalStatus: "",
+    nationality: "",
+    qualification: "",
+    dateofbirth: "",
+    permanentAddress: "",
+    department: employee.dept,
+    designation: employee.designation,
+    employeeType: employee.employmentType,
+    joiningDate: "",
+    aadharNo: "",
+    panNo: "",
+    accountNo: "",
+    ifscCode: "",
+    branchName: "",
+  }
+}
+
+async function createEmployeePdf(employee: Employee) {
   const pdf = await PDFDocument.create()
   const page = pdf.addPage([595.28, 841.89])
   const regular = await pdf.embedFont(StandardFonts.Helvetica)
@@ -353,37 +390,111 @@ async function downloadEmployeePdf(employee: Employee) {
   )
 
   const bytes = await pdf.save()
-  const blob = new Blob([bytes as BlobPart], { type: "application/pdf" })
-  const url = URL.createObjectURL(blob)
-  const anchor = document.createElement("a")
-  anchor.href = url
-  anchor.download = `${employee.empId}-${employee.name.replaceAll(" ", "-")}.pdf`
-  document.body.appendChild(anchor)
-  anchor.click()
-  anchor.remove()
-  window.setTimeout(() => URL.revokeObjectURL(url), 1000)
+  return new Blob([bytes as BlobPart], { type: "application/pdf" })
 }
 
 export default function StaffPage() {
+  const submittedRecords = useStaffRecords()
+  const deletedDemoIds = useDeletedStaffDemoIds()
   const [searchTerm, setSearchTerm] = useState("")
   const [downloadError, setDownloadError] = useState("")
-  const [downloadingId, setDownloadingId] = useState<number | null>(null)
+  const [downloadingId, setDownloadingId] = useState<number | string | null>(null)
+  const [pdfPreview, setPdfPreview] = useState<{
+    url: string
+    title: string
+    filename: string
+  } | null>(null)
+  const [previewingId, setPreviewingId] = useState<number | string | null>(null)
+
+  useEffect(() => {
+    return () => {
+      if (pdfPreview) URL.revokeObjectURL(pdfPreview.url)
+    }
+  }, [pdfPreview])
+
+  const employees = useMemo<Employee[]>(
+    () => [
+      ...submittedRecords.map((record) => {
+        const details = record.details
+        const demoId = record.id.startsWith("demo-staff-")
+          ? Number(record.id.slice("demo-staff-".length))
+          : null
+        const original = demoId
+          ? demoEmployees.find((employee) => employee.id === demoId)
+          : undefined
+        const name =
+          [details.firstname, details.lastname].filter(Boolean).join(" ") ||
+          original?.name ||
+          "New employee"
+        return {
+          id: record.id,
+          isSubmitted: true,
+          avatar: name
+            .split(/\s+/)
+            .slice(0, 2)
+            .map((part) => part[0] ?? "")
+            .join("")
+            .toUpperCase(),
+          color: "bg-emerald-600",
+          empId: details.employeeId || original?.empId || record.id,
+          name,
+          fatherName: details.fatherName || original?.fatherName || "",
+          phone: details.contactNumber || original?.phone || "",
+          email: details.email || original?.email || "",
+          dept: details.department || original?.dept || "",
+          designation: details.designation || original?.designation || "",
+          manager: original?.manager || "",
+          date: details.joiningDate || original?.date || "",
+          employmentType:
+            details.employeeType || original?.employmentType || "",
+          status: original?.status || "Active",
+          documents: record.documents,
+        }
+      }),
+      ...demoEmployees.filter(
+        (employee) =>
+          !deletedDemoIds.has(`demo-staff-${employee.id}`) &&
+          !submittedRecords.some(
+            (record) => record.id === `demo-staff-${employee.id}`
+          )
+      ),
+    ],
+    [deletedDemoIds, submittedRecords]
+  )
+
+  function openEmployeeEditor(employee: Employee) {
+    if (!employee.isSubmitted) {
+      saveStaffRecord(
+        staffDetailsFromEmployee(employee),
+        employee.documents,
+        `demo-staff-${employee.id}`
+      )
+    }
+  }
 
   const filteredEmployees = useMemo(() => {
     const query = searchTerm.trim().toLowerCase()
-    if (!query) return demoEmployees
-    return demoEmployees.filter(
+    if (!query) return employees
+    return employees.filter(
       (employee) =>
         employee.name.toLowerCase().includes(query) ||
         employee.phone.toLowerCase().includes(query)
     )
-  }, [searchTerm])
+  }, [employees, searchTerm])
 
   async function handleDownload(employee: Employee) {
     setDownloadingId(employee.id)
     setDownloadError("")
     try {
-      await downloadEmployeePdf(employee)
+      const blob = await createEmployeePdf(employee)
+      const url = URL.createObjectURL(blob)
+      const anchor = document.createElement("a")
+      anchor.href = url
+      anchor.download = `${employee.empId}-${employee.name.replaceAll(" ", "-")}.pdf`
+      document.body.appendChild(anchor)
+      anchor.click()
+      anchor.remove()
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000)
     } catch {
       setDownloadError(
         `Could not create the PDF for ${employee.name}. Please try again.`
@@ -393,15 +504,72 @@ export default function StaffPage() {
     }
   }
 
-  const activeCount = demoEmployees.filter(
+  async function handleViewPdf(employee: Employee) {
+    setPreviewingId(employee.id)
+    setDownloadError("")
+    try {
+      const blob = await createEmployeePdf(employee)
+      const url = URL.createObjectURL(blob)
+      setPdfPreview({
+        url,
+        title: `${employee.name} · Employee profile`,
+        filename: `${employee.empId}-${employee.name.replaceAll(" ", "-")}.pdf`,
+      })
+    } catch {
+      setDownloadError(
+        `Could not create the PDF for ${employee.name}. Please try again.`
+      )
+    } finally {
+      setPreviewingId(null)
+    }
+  }
+
+  const activeCount = employees.filter(
     (employee) => employee.status === "Active"
   ).length
   const departmentCount = new Set(
-    demoEmployees.map((employee) => employee.dept)
+    employees.map((employee) => employee.dept)
   ).size
+
+  if (pdfPreview) {
+    return (
+      <main className="min-h-screen bg-slate-100 p-3 sm:p-6">
+        <div className="mx-auto flex min-h-[calc(100vh-1.5rem)] max-w-7xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm sm:min-h-[calc(100vh-3rem)]">
+          <header className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 sm:px-6">
+            <div className="flex min-w-0 items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setPdfPreview(null)}
+                className="min-h-11 rounded-lg border border-slate-200 px-4 text-sm font-semibold text-slate-700 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+              >
+                Back to employees
+              </button>
+              <h1 className="truncate text-sm font-semibold text-slate-900 sm:text-base">
+                {pdfPreview.title}
+              </h1>
+            </div>
+            <a
+              href={pdfPreview.url}
+              download={pdfPreview.filename}
+              className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-emerald-700 px-4 text-sm font-semibold text-white hover:bg-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2"
+            >
+              <Download className="h-4 w-4" />
+              Download PDF
+            </a>
+          </header>
+          <iframe
+            title={pdfPreview.title}
+            src={pdfPreview.url}
+            className="min-h-[75vh] flex-1 bg-slate-200"
+          />
+        </div>
+      </main>
+    )
+  }
 
   return (
     <MotionConfig reducedMotion="user">
+      <>
       <main className="relative isolate min-h-[calc(100vh-9rem)] space-y-6 overflow-hidden rounded-[30px] bg-gradient-to-br from-slate-100 via-indigo-50/80 to-cyan-50/80 p-4 pb-10 sm:p-6 lg:p-7">
         <div
           className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
@@ -455,14 +623,14 @@ export default function StaffPage() {
             <div className="pointer-events-none absolute -top-10 -right-8 h-32 w-32 rounded-full bg-indigo-500/20 blur-2xl" />
             <div className="flex items-center justify-between">
               <span className="text-sm font-semibold text-indigo-950/75">
-                Demo employees
+                Total employees
               </span>
               <span className="rounded-xl bg-indigo-600 p-2 text-white shadow-md shadow-indigo-700/25">
                 <Users className="h-4 w-4" />
               </span>
             </div>
             <p className="mt-3 text-3xl font-bold text-indigo-950">
-              {demoEmployees.length}
+              {employees.length}
             </p>
             <p className="mt-2 text-xs font-medium text-indigo-950/65">
               Sample records for the directory preview
@@ -566,6 +734,9 @@ export default function StaffPage() {
                     const theme =
                       employeeCardThemes[index % employeeCardThemes.length] ??
                       employeeCardThemes[0]
+                    const editId = employee.isSubmitted
+                      ? String(employee.id)
+                      : `demo-staff-${employee.id}`
                     return (
                       <motion.article
                         key={employee.id}
@@ -584,20 +755,52 @@ export default function StaffPage() {
                         <div
                           className={`pointer-events-none absolute top-0 right-0 h-32 w-32 rounded-bl-full bg-gradient-to-bl ${theme.glow} to-transparent transition-transform duration-500 group-hover:scale-125`}
                         />
-                        <button
-                          type="button"
-                          onClick={() => void handleDownload(employee)}
-                          disabled={downloadingId === employee.id}
-                          aria-label={`Download ${employee.name} employee details as PDF`}
-                          className={`relative mb-4 inline-flex h-9 w-full cursor-pointer items-center justify-center gap-2 rounded-lg border bg-white/75 px-2 text-xs font-semibold shadow-sm transition disabled:cursor-wait disabled:opacity-60 ${theme.button}`}
-                        >
-                          <Download className="h-3.5 w-3.5 shrink-0" />
-                          <span className="truncate">
-                            {downloadingId === employee.id
-                              ? "Preparing..."
-                              : "PDF"}
-                          </span>
-                        </button>
+                        <div className="relative mb-4 flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => void handleDownload(employee)}
+                            disabled={downloadingId === employee.id}
+                            aria-label={`Download ${employee.name} employee details as PDF`}
+                            className={`inline-flex h-9 min-w-0 flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg border bg-white/75 px-2 text-xs font-semibold shadow-sm transition disabled:cursor-wait disabled:opacity-60 ${theme.button}`}
+                          >
+                            <Download className="h-3.5 w-3.5 shrink-0" />
+                            <span className="truncate">
+                              {downloadingId === employee.id
+                                ? "Preparing..."
+                                : "PDF"}
+                            </span>
+                          </button>
+                          <Link
+                            href={`/addstaff?edit=${encodeURIComponent(editId)}`}
+                            onClick={() => openEmployeeEditor(employee)}
+                            aria-label={`Edit ${employee.name}`}
+                            className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-indigo-200 bg-white/80 text-indigo-700 shadow-sm transition hover:bg-indigo-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Link>
+                          <button
+                            type="button"
+                            onClick={() => void handleViewPdf(employee)}
+                            disabled={previewingId === employee.id}
+                            aria-label={`Read ${employee.name} PDF`}
+                            title={previewingId === employee.id ? "Preparing PDF..." : "Read full PDF"}
+                            className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white/80 text-slate-700 shadow-sm transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 disabled:cursor-wait disabled:opacity-60"
+                          >
+                            <Eye className="h-4 w-4" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (window.confirm(`Delete ${employee.name}?`)) {
+                                deleteStaffRecord(editId)
+                              }
+                            }}
+                            aria-label={`Delete ${employee.name}`}
+                            className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-rose-200 bg-white/80 text-rose-700 shadow-sm transition hover:bg-rose-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
                         <div className="flex flex-col items-center text-center">
                           <span
                             className={`flex h-14 w-14 items-center justify-center rounded-full text-sm font-bold text-white ${employee.color}`}
@@ -665,12 +868,12 @@ export default function StaffPage() {
           )}
 
           <p className="border-t border-slate-100 px-5 py-3 text-xs leading-5 text-slate-500 sm:px-6">
-            Demo directory only. Submitted employee records and uploaded
-            documents require secure backend storage before they can appear here
-            or be included in employee PDFs.
+            Records added in this demo are kept in memory for this session and
+            clear when the page is refreshed. Connect the backend to keep them.
           </p>
         </motion.section>
       </main>
+      </>
     </MotionConfig>
   )
 }

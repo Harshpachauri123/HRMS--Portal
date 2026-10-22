@@ -3,28 +3,40 @@
 import Link from "next/link"
 import { AnimatePresence, MotionConfig, motion } from "motion/react"
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib"
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import {
   BriefcaseBusiness,
   CalendarDays,
   Check,
   Clock3,
   Download,
+  Eye,
   FileText,
   Mail,
+  Pencil,
   Plus,
   Phone,
   Search,
   Sparkles,
+  Trash2,
   Users,
   X,
 } from "lucide-react"
+import {
+  deleteCandidateRecord,
+  saveCandidateRecord,
+  useDeletedCandidateDemoIds,
+  useCandidateRecords,
+  type FormRecord,
+} from "@/lib/session-records"
 
 type CandidateStage =
   "New" | "Screening" | "Interview" | "Offer" | "Hired" | "Rejected"
 
 type Candidate = {
-  id: number
+  id: number | string
+  isSubmitted?: boolean
+  isSample?: boolean
   applicationId: string
   avatar: string
   color: string
@@ -177,8 +189,33 @@ const demoCandidates: Candidate[] = [
   },
 ]
 
-const stages: Array<"All" | CandidateStage> = [
-  "All",
+function candidateDetailsFromCandidate(candidate: Candidate): FormRecord {
+  const [firstname = "", ...lastName] = candidate.name.split(/\s+/)
+  return {
+    firstname,
+    lastname: lastName.join(" "),
+    candidateId: candidate.applicationId,
+    fatherName: "",
+    contactNumber: candidate.phone,
+    email: candidate.email,
+    maritalStatus: "",
+    nationality: "",
+    qualification: candidate.experience,
+    dateofbirth: "",
+    permanentAddress: "",
+    department: "",
+    designation: candidate.role,
+    employeeType: "",
+    joiningDate: "",
+    aadharNo: "",
+    panNo: "",
+    accountNo: "",
+    ifscCode: "",
+    branchName: "",
+  }
+}
+
+const candidateStages: CandidateStage[] = [
   "New",
   "Screening",
   "Interview",
@@ -186,6 +223,7 @@ const stages: Array<"All" | CandidateStage> = [
   "Hired",
   "Rejected",
 ]
+const stages: Array<"All" | CandidateStage> = ["All", ...candidateStages]
 
 const stageStyles: Record<CandidateStage, string> = {
   New: "border-sky-200 bg-sky-50 text-sky-700",
@@ -196,7 +234,7 @@ const stageStyles: Record<CandidateStage, string> = {
   Rejected: "border-slate-200 bg-slate-100 text-slate-600",
 }
 
-async function downloadCandidatePdf(candidate: Candidate) {
+async function createCandidatePdf(candidate: Candidate) {
   const pdf = await PDFDocument.create()
   const page = pdf.addPage([595.28, 841.89])
   const regular = await pdf.embedFont(StandardFonts.Helvetica)
@@ -239,7 +277,7 @@ async function downloadCandidatePdf(candidate: Candidate) {
     ["Email address", candidate.email],
     ["Contact number", candidate.phone],
     ["Applied role", candidate.role],
-    ["Experience", candidate.experience],
+    [candidate.isSample ? "Experience" : "Qualification", candidate.experience],
     ["Application date", candidate.appliedOn],
     ["Current stage", candidate.stage],
     ["Application source", candidate.source],
@@ -308,28 +346,112 @@ async function downloadCandidatePdf(candidate: Candidate) {
   )
 
   const bytes = await pdf.save()
-  const blob = new Blob([bytes as BlobPart], { type: "application/pdf" })
-  const url = URL.createObjectURL(blob)
-  const anchor = document.createElement("a")
-  anchor.href = url
-  anchor.download = `${candidate.applicationId}-${candidate.name.replaceAll(" ", "-")}.pdf`
-  document.body.appendChild(anchor)
-  anchor.click()
-  anchor.remove()
-  window.setTimeout(() => URL.revokeObjectURL(url), 1000)
+  return new Blob([bytes as BlobPart], { type: "application/pdf" })
 }
 
 export default function CandidatePage() {
+  const submittedRecords = useCandidateRecords()
+  const deletedDemoIds = useDeletedCandidateDemoIds()
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedStage, setSelectedStage] = useState<"All" | CandidateStage>(
     "All"
   )
   const [downloadError, setDownloadError] = useState("")
-  const [downloadingId, setDownloadingId] = useState<number | null>(null)
+  const [downloadingId, setDownloadingId] = useState<number | string | null>(null)
+  const [pdfPreview, setPdfPreview] = useState<{
+    url: string
+    title: string
+    filename: string
+  } | null>(null)
+  const [previewingId, setPreviewingId] = useState<number | string | null>(null)
+
+  useEffect(() => {
+    return () => {
+      if (pdfPreview) URL.revokeObjectURL(pdfPreview.url)
+    }
+  }, [pdfPreview])
+
+  const candidates = useMemo<Candidate[]>(
+    () => [
+      ...submittedRecords.map((record) => {
+        const details = record.details
+        const demoId = record.id.startsWith("demo-candidate-")
+          ? Number(record.id.slice("demo-candidate-".length))
+          : null
+        const original = demoId
+          ? demoCandidates.find((candidate) => candidate.id === demoId)
+          : undefined
+        const name =
+          [details.firstname, details.lastname].filter(Boolean).join(" ") ||
+          original?.name ||
+          "New candidate"
+        return {
+          id: record.id,
+          isSubmitted: true,
+          isSample: Boolean(original),
+          applicationId:
+            details.candidateId || original?.applicationId || record.id,
+          avatar: name
+            .split(/\s+/)
+            .slice(0, 2)
+            .map((part) => part[0] ?? "")
+            .join("")
+            .toUpperCase(),
+          color: "bg-teal-600",
+          name: name || "New candidate",
+          email: details.email || original?.email || "",
+          phone: details.contactNumber || original?.phone || "",
+          role: details.designation || original?.role || "",
+          experience:
+            details.qualification || original?.experience || "Not specified",
+          appliedOn: original?.appliedOn || "Just added",
+          stage:
+            candidateStages.find((stage) => stage === details.stage) ??
+            original?.stage ??
+            "New",
+          source: original?.source || "Added manually",
+          documents: record.documents,
+        }
+      }),
+      ...demoCandidates.filter(
+        (candidate) =>
+          !deletedDemoIds.has(`demo-candidate-${candidate.id}`) &&
+          !submittedRecords.some(
+            (record) => record.id === `demo-candidate-${candidate.id}`
+          )
+      ),
+    ],
+    [deletedDemoIds, submittedRecords]
+  )
+
+  function openCandidateEditor(candidate: Candidate) {
+    if (!candidate.isSubmitted) {
+      saveCandidateRecord(
+        candidateDetailsFromCandidate(candidate),
+        candidate.documents,
+        `demo-candidate-${candidate.id}`
+      )
+    }
+  }
+
+  function updateCandidateStage(candidate: Candidate, stage: CandidateStage) {
+    const recordId = candidate.isSubmitted
+      ? String(candidate.id)
+      : `demo-candidate-${candidate.id}`
+    const currentDetails =
+      submittedRecords.find((record) => record.id === recordId)?.details ??
+      candidateDetailsFromCandidate(candidate)
+
+    saveCandidateRecord(
+      { ...currentDetails, stage },
+      candidate.documents,
+      recordId
+    )
+  }
 
   const filteredCandidates = useMemo(() => {
     const query = searchTerm.trim().toLowerCase()
-    return demoCandidates.filter((candidate) => {
+    return candidates.filter((candidate) => {
       const matchesSearch =
         !query ||
         candidate.name.toLowerCase().includes(query) ||
@@ -339,13 +461,21 @@ export default function CandidatePage() {
         selectedStage === "All" || candidate.stage === selectedStage
       return matchesSearch && matchesStage
     })
-  }, [searchTerm, selectedStage])
+  }, [candidates, searchTerm, selectedStage])
 
   async function handleDownload(candidate: Candidate) {
     setDownloadingId(candidate.id)
     setDownloadError("")
     try {
-      await downloadCandidatePdf(candidate)
+      const blob = await createCandidatePdf(candidate)
+      const url = URL.createObjectURL(blob)
+      const anchor = document.createElement("a")
+      anchor.href = url
+      anchor.download = `${candidate.applicationId}-${candidate.name.replaceAll(" ", "-")}.pdf`
+      document.body.appendChild(anchor)
+      anchor.click()
+      anchor.remove()
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000)
     } catch {
       setDownloadError(
         `Could not create the PDF for ${candidate.name}. Please try again.`
@@ -355,15 +485,35 @@ export default function CandidatePage() {
     }
   }
 
-  const hiredCount = demoCandidates.filter(
+  async function handleViewPdf(candidate: Candidate) {
+    setPreviewingId(candidate.id)
+    setDownloadError("")
+    try {
+      const blob = await createCandidatePdf(candidate)
+      const url = URL.createObjectURL(blob)
+      setPdfPreview({
+        url,
+        title: `${candidate.name} · Candidate profile`,
+        filename: `${candidate.applicationId}-${candidate.name.replaceAll(" ", "-")}.pdf`,
+      })
+    } catch {
+      setDownloadError(
+        `Could not create the PDF for ${candidate.name}. Please try again.`
+      )
+    } finally {
+      setPreviewingId(null)
+    }
+  }
+
+  const hiredCount = candidates.filter(
     (candidate) => candidate.stage === "Hired"
   ).length
-  const notHiredCount = demoCandidates.length - hiredCount
+  const notHiredCount = candidates.length - hiredCount
 
   const metrics = [
     {
       label: "Total applicants",
-      value: demoCandidates.length,
+      value: candidates.length,
       detail: "Across all open roles",
       icon: Users,
       tone: "border-slate-200 bg-white text-slate-900",
@@ -387,8 +537,45 @@ export default function CandidatePage() {
     },
   ]
 
+  if (pdfPreview) {
+    return (
+      <main className="min-h-screen bg-slate-100 p-3 sm:p-6">
+        <div className="mx-auto flex min-h-[calc(100vh-1.5rem)] max-w-7xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm sm:min-h-[calc(100vh-3rem)]">
+          <header className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 sm:px-6">
+            <div className="flex min-w-0 items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setPdfPreview(null)}
+                className="min-h-11 rounded-lg border border-slate-200 px-4 text-sm font-semibold text-slate-700 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+              >
+                Back to candidates
+              </button>
+              <h1 className="truncate text-sm font-semibold text-slate-900 sm:text-base">
+                {pdfPreview.title}
+              </h1>
+            </div>
+            <a
+              href={pdfPreview.url}
+              download={pdfPreview.filename}
+              className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-emerald-700 px-4 text-sm font-semibold text-white hover:bg-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2"
+            >
+              <Download className="h-4 w-4" />
+              Download PDF
+            </a>
+          </header>
+          <iframe
+            title={pdfPreview.title}
+            src={pdfPreview.url}
+            className="min-h-[75vh] flex-1 bg-slate-200"
+          />
+        </div>
+      </main>
+    )
+  }
+
   return (
     <MotionConfig reducedMotion="user">
+      <>
       <main className="relative isolate min-h-[calc(100vh-9rem)] space-y-6 overflow-hidden rounded-[30px] bg-gradient-to-br from-slate-50 via-emerald-50/70 to-cyan-50/80 p-4 pb-10 sm:p-6 lg:p-7">
         <div
           className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
@@ -436,7 +623,7 @@ export default function CandidatePage() {
           <div className="relative mt-7 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-white/10 pt-4 text-xs text-emerald-100/75">
             <span className="inline-flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-emerald-300" />
-              {demoCandidates.length} sample applications
+              {candidates.length} applications in this session
             </span>
             <span>Updated just now</span>
             <span className="rounded-full border border-white/15 px-2.5 py-1">
@@ -521,8 +708,8 @@ export default function CandidatePage() {
               {stages.map((stage) => {
                 const count =
                   stage === "All"
-                    ? demoCandidates.length
-                    : demoCandidates.filter(
+                    ? candidates.length
+                    : candidates.filter(
                         (candidate) => candidate.stage === stage
                       ).length
                 const isSelected = selectedStage === stage
@@ -567,8 +754,12 @@ export default function CandidatePage() {
             <div className="bg-gradient-to-br from-emerald-50/35 via-white/50 to-cyan-50/40 p-5 sm:p-6">
               <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
                 <AnimatePresence mode="popLayout">
-                  {filteredCandidates.map((candidate, index) => (
-                    <motion.article
+                  {filteredCandidates.map((candidate, index) => {
+                    const editId = candidate.isSubmitted
+                      ? String(candidate.id)
+                      : `demo-candidate-${candidate.id}`
+                    return (
+                      <motion.article
                       key={candidate.id}
                       layout
                       initial={{ opacity: 0, y: 16 }}
@@ -618,7 +809,13 @@ export default function CandidatePage() {
                           <div className="mt-4 grid grid-cols-2 gap-3 rounded-xl bg-slate-50/80 p-3">
                             <div className="flex items-center gap-2 text-xs text-slate-600">
                               <Clock3 className="h-3.5 w-3.5 shrink-0 text-slate-400" />
-                              <span>{candidate.experience} experience</span>
+                              <span>
+                                {candidate.isSubmitted
+                                  ? candidate.isSample
+                                    ? `${candidate.experience} experience`
+                                    : `Qualification: ${candidate.experience}`
+                                  : `${candidate.experience} experience`}
+                              </span>
                             </div>
                             <div className="flex items-center gap-2 text-xs text-slate-600">
                               <CalendarDays className="h-3.5 w-3.5 shrink-0 text-slate-400" />
@@ -653,23 +850,77 @@ export default function CandidatePage() {
                               </span>
                               <span>Via {candidate.source}</span>
                             </div>
-                            <button
-                              type="button"
-                              onClick={() => void handleDownload(candidate)}
-                              disabled={downloadingId === candidate.id}
-                              aria-label={`Download ${candidate.name} candidate profile as PDF`}
-                              className="inline-flex h-9 cursor-pointer items-center justify-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-3 text-xs font-semibold text-emerald-800 transition hover:border-emerald-300 hover:bg-emerald-100 disabled:cursor-wait disabled:opacity-60"
-                            >
-                              <Download className="h-3.5 w-3.5" />
-                              {downloadingId === candidate.id
-                                ? "Preparing..."
-                                : "Download profile"}
-                            </button>
+                            <div className="flex flex-wrap items-center gap-2">
+                              <Link
+                                href={`/addcandidate?edit=${encodeURIComponent(editId)}`}
+                                onClick={() => openCandidateEditor(candidate)}
+                                aria-label={`Edit ${candidate.name}`}
+                                className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-sky-200 bg-white text-sky-700 transition hover:bg-sky-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
+                              >
+                                <Pencil className="h-4 w-4" />
+                              </Link>
+                              <label className="sr-only" htmlFor={`stage-${candidate.id}`}>
+                                Change {candidate.name}'s application stage
+                              </label>
+                              <select
+                                id={`stage-${candidate.id}`}
+                                value={candidate.stage}
+                                onChange={(event) =>
+                                  updateCandidateStage(
+                                    candidate,
+                                    event.target.value as CandidateStage
+                                  )
+                                }
+                                aria-label={`Change ${candidate.name}'s application stage`}
+                                className={`min-h-9 cursor-pointer rounded-lg border px-2.5 text-xs font-semibold shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${stageStyles[candidate.stage]}`}
+                              >
+                                {candidateStages.map((stage) => (
+                                  <option key={stage} value={stage}>
+                                    {stage}
+                                  </option>
+                                ))}
+                              </select>
+                              <button
+                                type="button"
+                                onClick={() => void handleViewPdf(candidate)}
+                                disabled={previewingId === candidate.id}
+                                aria-label={`Read ${candidate.name} PDF`}
+                                title={previewingId === candidate.id ? "Preparing PDF..." : "Read full PDF"}
+                                className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 disabled:cursor-wait disabled:opacity-60"
+                              >
+                                <Eye className="h-4 w-4" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (window.confirm(`Delete ${candidate.name}?`)) {
+                                    deleteCandidateRecord(editId)
+                                  }
+                                }}
+                                aria-label={`Delete ${candidate.name}`}
+                                className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-rose-200 bg-white text-rose-700 transition hover:bg-rose-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => void handleDownload(candidate)}
+                                disabled={downloadingId === candidate.id}
+                                aria-label={`Download ${candidate.name} candidate profile as PDF`}
+                                className="inline-flex h-9 cursor-pointer items-center justify-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-3 text-xs font-semibold text-emerald-800 transition hover:border-emerald-300 hover:bg-emerald-100 disabled:cursor-wait disabled:opacity-60"
+                              >
+                                <Download className="h-3.5 w-3.5" />
+                                {downloadingId === candidate.id
+                                  ? "Preparing..."
+                                  : "Download profile"}
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </motion.article>
-                  ))}
+                      </motion.article>
+                    )
+                  })}
                 </AnimatePresence>
               </div>
             </div>
@@ -698,11 +949,12 @@ export default function CandidatePage() {
           )}
 
           <p className="border-t border-slate-100 px-5 py-3 text-xs leading-5 text-slate-500 sm:px-6">
-            Demo pipeline only. Candidate details and submitted documents are
-            sample data and are not connected to HRMS storage.
+            Records added in this demo are kept in memory for this session and
+            clear when the page is refreshed. Connect the backend to keep them.
           </p>
         </motion.section>
       </main>
+      </>
     </MotionConfig>
   )
 }
