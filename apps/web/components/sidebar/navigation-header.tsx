@@ -49,11 +49,13 @@ export function NavigationHeader({
         </Button>
 
         <div className="min-w-0">
-          <h1 className="truncate text-base font-bold leading-tight text-slate-950 sm:text-2xl">
-            Staff Management - HRMS Portal
+          <h1 className="truncate text-base font-bold leading-tight text-emerald-600 sm:text-2xl">
+            HR Pulse - Connecting People, Powering Progress
           </h1>
-          <p className="mt-1 truncate text-xs font-medium text-rose-800">
-            SDV Edutech Pvt. Ltd.
+          <p>
+            <span className="truncate text-sm font-medium text-slate-500">
+              Staff Management - HRMS Portal
+            </span>
           </p>
         </div>
       </div>

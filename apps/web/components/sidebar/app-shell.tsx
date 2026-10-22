@@ -4,9 +4,16 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  ChevronDown,
   ClipboardList,
+  KeyRound,
   LayoutDashboard,
+  ScrollText,
+  Settings as SettingsIcon,
+  Shield,
   X,
+  UserRound,
+  Users,
 } from "lucide-react";
 import { NavigationHeader } from "@/components/sidebar/navigation-header";
 import { Button } from "@workspace/ui/components/button";
@@ -36,7 +43,7 @@ const Main = [
 ];
 
 const sidebarLogoUrl =
-  "/sdv logo.png";
+  "/Hr Pulse.png";
 
 function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
@@ -57,18 +64,28 @@ function SidebarContentBody({
   pathname: string;
   onNavigate?: () => void;
 }) {
+  const [settingsOpen, setSettingsOpen] = React.useState(
+    pathname.startsWith("/settings")
+  );
+  const inSettings = pathname.startsWith("/settings");
+  const settingsSections = [
+    { href: "/settings/profile", label: "Profile", icon: UserRound },
+    { href: "/settings/users", label: "Users", icon: Users },
+    { href: "/settings/roles", label: "Roles", icon: Shield },
+    { href: "/settings/permissions", label: "Permissions", icon: KeyRound },
+    { href: "/settings/audit-logs", label: "Audit Logs", icon: ScrollText },
+  ];
+
   return (
     <div className="flex h-full flex-col border-r border-slate-200 bg-white">
-      <div className="flex h-20 items-center gap-2 px-4">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={sidebarLogoUrl}
-          alt="SDV Edutech logo"
-          className="h-auto w-24 shrink-0 object-contain"
-        />
-        <div>
-          <p className="text-sm font-bold text-red-800">SDV Edutech Pvt. Ltd.</p>
-          <p className="text-xs font-medium text-red-500">HRMS Management</p>
+      <div className="border-b border-slate-200/80 px-4 py-4">
+        <div className="h-28 w-full overflow-hidden rounded-xl border border-white/80 bg-slate-50 shadow-sm ring-1 ring-slate-200/70">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={sidebarLogoUrl}
+            alt="HR Pulse - Connecting People, Powering Progress"
+            className="h-full w-full object-contain"
+          />
         </div>
       </div>
 
@@ -95,6 +112,55 @@ function SidebarContentBody({
             </Link>
           );
         })}
+        <div className="mt-2 border-t border-slate-100 pt-2">
+          <button
+            type="button"
+            aria-expanded={settingsOpen}
+            aria-controls="settings-navigation"
+            onClick={() => setSettingsOpen((open) => !open)}
+            className={cn(
+              "flex min-h-11 w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-semibold transition focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none",
+              inSettings
+                ? "bg-indigo-50 text-indigo-700"
+                : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
+            )}
+          >
+            <SettingsIcon className="h-5 w-5" aria-hidden="true" />
+            <span className="flex-1">Settings</span>
+            <ChevronDown
+              className={cn(
+                "h-4 w-4 transition-transform",
+                settingsOpen && "rotate-180"
+              )}
+              aria-hidden="true"
+            />
+          </button>
+          {settingsOpen ? (
+            <div id="settings-navigation" className="mt-1 grid gap-1 pl-4">
+              {settingsSections.map((section) => {
+                const Icon = section.icon;
+                const active = pathname === section.href;
+                return (
+                  <Link
+                    key={section.href}
+                    href={section.href}
+                    onClick={onNavigate}
+                    aria-current={active ? "page" : undefined}
+                    className={cn(
+                      "flex min-h-11 items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none",
+                      active
+                        ? "bg-indigo-100 text-indigo-800"
+                        : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
+                    )}
+                  >
+                    <Icon className="h-4 w-4" aria-hidden="true" />
+                    <span>{section.label}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          ) : null}
+        </div>
       </nav>
 
       <div className="mt-auto border-t border-slate-200 p-4">
