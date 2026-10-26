@@ -1,4 +1,4 @@
-import { Bell, ChevronDown, LogOut, Menu, UserRound } from "lucide-react";
+import { ChevronDown, LogOut, Menu, UserRound } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@workspace/ui/components/button";
 
@@ -61,15 +61,6 @@ export function NavigationHeader({
       </div>
 
       <div className="flex shrink-0 items-center gap-3">
-        <button
-          suppressHydrationWarning
-          type="button"
-          aria-label="Notifications"
-          className="relative inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-[#ead9ae] bg-[#fffdf5] text-slate-700 shadow-sm transition hover:border-lime-300 hover:bg-lime-100 hover:text-green-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-600 focus-visible:ring-offset-2"
-        >
-          <Bell className="h-5 w-5" />
-          <span className="absolute right-2.5 top-2.5 h-2.5 w-2.5 rounded-full border-2 border-white bg-rose-500" />
-        </button>
 
         {user ? (
           <div className="relative">

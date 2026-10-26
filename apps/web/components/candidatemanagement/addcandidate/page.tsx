@@ -133,12 +133,6 @@ const fieldGroups: FieldGroup[] = [
         colSpan: true,
       },
       {
-        name: "candidateId",
-        label: "Candidate ID",
-        type: "text",
-        placeholder: "e.g. CA-2041 or EMP-101",
-      },
-      {
         name: "fatherName",
         label: "Father's name",
         type: "text",
@@ -185,18 +179,6 @@ const fieldGroups: FieldGroup[] = [
           "Intermediate",
           "Bachelor's Degree",
           "Master's Degree",
-        ],
-      },
-      {
-        name: "experience",
-        label: "Total experience",
-        type: "select",
-        placeholder: "Select experience level",
-        options: [
-          "Fresher",
-          "1-2 years",
-          "3-5 years",
-          "5+ years",
         ],
       },
        {
@@ -252,18 +234,18 @@ const fieldGroups: FieldGroup[] = [
   },
 ]
 
-function readDetails(formData: FormData): CandidateDetails {
+function readDetails(formData: FormData, previousDetails?: Record<string, string>): CandidateDetails {
   return {
     firstname: String(formData.get("firstname") ?? "").trim(),
     lastname: String(formData.get("lastname") ?? "").trim(),
-    candidateId: String(formData.get("candidateId") ?? "").trim(),
+    candidateId: String(formData.get("candidateId") ?? previousDetails?.candidateId ?? "").trim(),
     fatherName: String(formData.get("fatherName") ?? "").trim(),
     contactNumber: String(formData.get("contactNumber") ?? "").trim(),
     email: String(formData.get("email") ?? "").trim(),
     maritalStatus: String(formData.get("maritalStatus") ?? "").trim(),
     nationality: String(formData.get("nationality") ?? "").trim(),
     qualification: String(formData.get("qualification") ?? "").trim(),
-    experience: String(formData.get("experience") ?? "").trim(),
+    experience: String(formData.get("experience") ?? previousDetails?.experience ?? "").trim(),
     dateofbirth: String(formData.get("dateofbirth") ?? "").trim(),
     permanentAddress: String(formData.get("permanentAddress") ?? "").trim(),
     department: String(formData.get("department") ?? "").trim(),
@@ -373,11 +355,11 @@ function DocumentUpload({
           </p>
           {file ? (
             <p className="mt-1 truncate text-xs text-slate-500">
-              {file.name} ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· {(file.size / (1024 * 1024)).toFixed(2)} MB
+              {file.name} - {(file.size / (1024 * 1024)).toFixed(2)} MB
             </p>
           ) : (
             <p className="mt-1 text-xs text-slate-500">
-              JPG, PNG, WebP or PDF ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· up to 10 MB
+              JPG, PNG, WebP or PDF - up to 10 MB
             </p>
           )}
           <button
@@ -481,7 +463,7 @@ function CandidateResumeUpload({
           <p className="mt-1 text-xs text-slate-500">
             {file
               ? `${(file.size / (1024 * 1024)).toFixed(2)} MB`
-              : "PDF, DOC, or DOCX ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· up to 10 MB"}
+              : "PDF, DOC, or DOCX - up to 10 MB"}
           </p>
           <div className="mt-4 flex flex-wrap justify-center gap-2">
             <button
@@ -572,7 +554,7 @@ export default function AddCandidatePage({
 
   function handleReview(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    setDetails(readDetails(new FormData(event.currentTarget)))
+    setDetails(readDetails(new FormData(event.currentTarget), editingRecord?.details))
     setStep("review")
     toast.add({
       title: "Application ready to review",
@@ -672,10 +654,10 @@ export default function AddCandidatePage({
                 )}
               </span>
               {step === "editing"
-                ? "Step 1 ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Candidate details & documents"
+                ? "Step 1 - Candidate details & documents"
                 : step === "review"
-                  ? "Step 2 ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Review"
-                  : "Step 3 ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Complete"}
+                  ? "Step 2 - Review"
+                  : "Step 3 - Complete"}
             </div>
           </div>
           <div className="relative mt-7 h-1.5 overflow-hidden rounded-full bg-white/15">
@@ -736,13 +718,13 @@ export default function AddCandidatePage({
                     <dd className="mt-1 font-medium text-slate-900">{jobApplication.experience}</dd>
                   </div>
                 ) : null}
-                {jobApplication.responsibilities ? (
-                  <div className="sm:col-span-2">
-                    <dt className="text-xs font-semibold uppercase text-slate-500">Roles &amp; responsibilities</dt>
-                    <dd className="mt-1 whitespace-pre-line leading-6 text-slate-700">{jobApplication.responsibilities}</dd>
-                  </div>
-                ) : null}
               </dl>
+              {jobApplication.responsibilities ? (
+                <div className="mt-5 border-t border-lime-200/80 pt-4">
+                  <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500">Roles &amp; responsibilities</h3>
+                  <p className="mt-2 whitespace-pre-line break-words text-sm leading-6 text-slate-700">{jobApplication.responsibilities}</p>
+                </div>
+              ) : null}
             </section>
           ) : null}
           <input type="hidden" name="companyName" value={jobApplication.company} />
@@ -962,7 +944,7 @@ export default function AddCandidatePage({
                   {
                     icon: FileText,
                     title: "Resume",
-                    description: "PDF, DOC, or DOCX ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· max 10 MB",
+                    description: "PDF, DOC, or DOCX - max 10 MB",
                   },
                   {
                     icon: ShieldCheck,
@@ -1064,7 +1046,7 @@ export default function AddCandidatePage({
                             {field.label}
                           </dt>
                           <dd className="mt-1.5 text-sm font-medium break-words text-slate-900">
-                            {details[field.name] || "ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â"}
+                            {details[field.name] || "-"}
                           </dd>
                         </div>
                       ))}
@@ -1156,7 +1138,7 @@ export default function AddCandidatePage({
                             </span>
                             {uploadedFile ? (
                               <span className="mt-0.5 block truncate text-xs text-slate-500">
-                                {uploadedFile.name} ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â·{" "}
+                                {uploadedFile.name} -{" "}
                                 {(
                                   uploadedFile.size /
                                   (1024 * 1024)

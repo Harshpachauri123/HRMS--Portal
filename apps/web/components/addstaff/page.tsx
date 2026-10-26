@@ -43,8 +43,8 @@ const documentGroups = [
     description: "Upload clear photos or scans of the employee's ID proofs.",
     icon: ShieldCheck,
     documents: [
-      { id: "aadhaar-front", label: "Aadhaar card Ã¢â‚¬â€ front side" },
-      { id: "aadhaar-back", label: "Aadhaar card Ã¢â‚¬â€ back side" },
+      { id: "aadhaar-front", label: "Aadhaar card - front side" },
+      { id: "aadhaar-back", label: "Aadhaar card - back side" },
       { id: "pan-card", label: "PAN card" },
     ],
   },
@@ -405,11 +405,11 @@ function DocumentUpload({
           </p>
           {file ? (
             <p className="mt-1 truncate text-xs text-slate-500">
-              {file.name} Ã‚Â· {(file.size / (1024 * 1024)).toFixed(2)} MB
+              {file.name} - {(file.size / (1024 * 1024)).toFixed(2)} MB
             </p>
           ) : (
             <p className="mt-1 text-xs text-slate-500">
-              JPG, PNG, WebP or PDF Ã‚Â· up to 10 MB
+              JPG, PNG, WebP or PDF - up to 10 MB
             </p>
           )}
           <button
@@ -867,7 +867,7 @@ export default function AddStaffPage() {
                             {field.label}
                           </dt>
                           <dd className="mt-1.5 text-sm font-medium break-words text-slate-900">
-                            {details[field.name] || "Ã¢â‚¬â€"}
+                            {details[field.name] || "-"}
                           </dd>
                         </div>
                       ))}
@@ -924,7 +924,7 @@ export default function AddStaffPage() {
                             </span>
                             {uploadedFile ? (
                               <span className="mt-0.5 block truncate text-xs text-slate-500">
-                                {uploadedFile.name} Ã‚Â·{" "}
+                                {uploadedFile.name} -{" "}
                                 {(
                                   uploadedFile.size /
                                   (1024 * 1024)

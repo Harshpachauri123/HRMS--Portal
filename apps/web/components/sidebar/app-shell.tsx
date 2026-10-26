@@ -84,7 +84,7 @@ function SidebarContentBody({
     },
     {
       href: "/candidatemanagement/position-link-generator",
-      label: "Position Link Generator",
+      label: "Apply Form",
       icon: Link2,
     },
   ];

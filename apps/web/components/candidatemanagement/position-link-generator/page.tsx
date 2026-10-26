@@ -108,22 +108,14 @@ export default function PositionLinkGeneratorPage() {
               Careers workspace
             </p>
             <h1 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl">
-              Position link generator
+              Application link generator
             </h1>
             <p className="mt-2 text-sm leading-6 text-green-50/80">
               Review each role, share its application link, or open its details
               before continuing to the candidate form.
             </p>
           </div>
-          <Link
-            href="/candidatemanagement/open-positions"
-            className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-lg border border-white/25 bg-white/10 px-4 text-sm font-semibold text-white transition hover:border-lime-200 hover:bg-lime-300 hover:text-green-950 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-lime-200/50"
-          >
-            <Sparkles aria-hidden="true" className="h-4 w-4" />
-            Manage positions
-            <ArrowRight aria-hidden="true" className="h-4 w-4" />
-          </Link>
-        </div>
+          </div>
       </header>
 
       <section aria-label="Position overview" className="grid gap-3 sm:grid-cols-2">
@@ -227,9 +219,10 @@ export default function PositionLinkGeneratorPage() {
                         </div>
                       </div>
                     </div>
-                    <p className="mt-4 line-clamp-3 whitespace-pre-line text-sm leading-6 text-slate-600">
-                      {job.responsibilities}
-                    </p>
+                    <div className="mt-4">
+                      <p className="text-xs font-medium text-slate-500">Roles &amp; responsibilities</p>
+                      <p className="mt-1 line-clamp-3 whitespace-pre-line text-sm leading-6 text-slate-600">{job.responsibilities}</p>
+                    </div>
                   </div>
 
                   <div className="mt-5 grid gap-2 sm:grid-cols-2">
@@ -307,30 +300,34 @@ export default function PositionLinkGeneratorPage() {
               </button>
             </div>
 
-            <div className="grid gap-6 p-5 sm:grid-cols-2 sm:p-6">
-              <dl className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-5 p-5 sm:p-6">
+              <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-2">
                 <div>
-                  <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">Company</dt>
+                  <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">Company name</dt>
                   <dd className="mt-1 break-words text-sm font-semibold text-slate-900">{selectedJob.company}</dd>
                 </div>
                 <div>
                   <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">Job ID</dt>
                   <dd className="mt-1 text-sm font-semibold text-slate-900">{selectedJob.id}</dd>
                 </div>
-                <div className="sm:col-span-2">
+                <div>
+                  <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">Position</dt>
+                  <dd className="mt-1 break-words text-sm font-semibold text-slate-900">{selectedJob.position}</dd>
+                </div>
+                <div>
                   <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">Required experience</dt>
                   <dd className="mt-1 text-sm font-semibold text-slate-900">{selectedJob.experience}</dd>
                 </div>
               </dl>
 
-              <div>
-                <h3 className="text-sm font-bold text-slate-900">Roles &amp; responsibilities</h3>
-                <p className="mt-2 whitespace-pre-line text-sm leading-6 text-slate-700">
+              <div className="border-t border-[#eee3c8] pt-4">
+                <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500">Roles &amp; responsibilities</h3>
+                <p className="mt-2 whitespace-pre-line break-words text-sm leading-6 text-slate-700">
                   {selectedJob.responsibilities}
                 </p>
               </div>
 
-              <div className="flex flex-col gap-3 border-t border-[#eee3c8] pt-5 sm:col-span-2 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex flex-col gap-3 border-t border-[#eee3c8] pt-5 sm:flex-row sm:items-center sm:justify-between">
                 <p className="text-sm text-slate-600">
                   Review the role details, then continue to the candidate application form.
                 </p>
