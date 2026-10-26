@@ -5,9 +5,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   ChevronDown,
+  BriefcaseBusiness,
   ClipboardList,
   KeyRound,
   LayoutDashboard,
+  Link2,
   ScrollText,
   Settings as SettingsIcon,
   Shield,
@@ -19,7 +21,7 @@ import { NavigationHeader } from "@/components/sidebar/navigation-header";
 import { Button } from "@workspace/ui/components/button";
 import { cn } from "@/lib/utils";
 
-const Main = [
+const MainTop = [
   {
     href: "/",
     label: "Dashboard",
@@ -30,20 +32,17 @@ const Main = [
     label: "Employees Management",
     icon: ClipboardList,
   },
+];
+
+const MainBottom = [
   {
-    href: "/candidates",
-    label: "Candidates Management",
-    icon: ClipboardList,
-  },
-   {
     href: "/attendance",
     label: "Attendance Management",
     icon: ClipboardList,
   },
 ];
 
-const sidebarLogoUrl =
-  "/Hr Pulse.png";
+const sidebarLogoUrl = "/Hr Pulse.png";
 
 function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
@@ -67,7 +66,28 @@ function SidebarContentBody({
   const [settingsOpen, setSettingsOpen] = React.useState(
     pathname.startsWith("/settings")
   );
+  const [candidateManagementOpen, setCandidateManagementOpen] = React.useState(
+    pathname.startsWith("/candidatemanagement")
+  );
   const inSettings = pathname.startsWith("/settings");
+  const inCandidateManagement = pathname.startsWith("/candidatemanagement");
+  const candidateManagementSections = [
+    {
+      href: "/candidatemanagement/candidateprofile",
+      label: "Candidate Dashboard",
+      icon: LayoutDashboard,
+    },
+    {
+      href: "/candidatemanagement/open-positions",
+      label: "Open Position",
+      icon: BriefcaseBusiness,
+    },
+    {
+      href: "/candidatemanagement/position-link-generator",
+      label: "Position Link Generator",
+      icon: Link2,
+    },
+  ];
   const settingsSections = [
     { href: "/settings/profile", label: "Profile", icon: UserRound },
     { href: "/settings/users", label: "Users", icon: Users },
@@ -90,10 +110,12 @@ function SidebarContentBody({
       </div>
 
       <nav className="grid gap-1 px-3">
-        {Main.map((item) => {
+        {MainTop.map((item) => {
           const Icon = item.icon;
           const active =
-            item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+            item.href === "/"
+              ? pathname === "/"
+              : pathname.startsWith(item.href);
 
           return (
             <Link
@@ -104,7 +126,77 @@ function SidebarContentBody({
                 "flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold transition",
                 active
                   ? "bg-indigo-50 text-indigo-700"
-                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-950",
+                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
+              )}
+            >
+              <Icon className="h-5 w-5" />
+              <span>{item.label}</span>
+            </Link>
+          );
+        })}
+        <button
+            type="button"
+            aria-expanded={candidateManagementOpen}
+            aria-controls="candidate-management-navigation"
+            onClick={() => setCandidateManagementOpen((open) => !open)}
+            className={cn(
+              "flex min-h-11 w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-semibold transition focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none",
+              inCandidateManagement
+                ? "bg-indigo-50 text-indigo-700"
+                : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
+            )}
+          >
+            <ClipboardList className="h-5 w-5" aria-hidden="true" />
+            <span className="flex-1">Candidates Management</span>
+            <ChevronDown
+              className={cn(
+                "h-4 w-4 transition-transform",
+                candidateManagementOpen && "rotate-180"
+              )}
+              aria-hidden="true"
+            />
+          </button>
+          {candidateManagementOpen ? (
+            <div
+              id="candidate-management-navigation"
+              className="mt-1 grid gap-1 pl-4"
+            >
+              {candidateManagementSections.map((section) => {
+                const Icon = section.icon;
+                const active = pathname === section.href;
+                return (
+                  <Link
+                    key={section.href}
+                    href={section.href}
+                    onClick={onNavigate}
+                    aria-current={active ? "page" : undefined}
+                    className={cn(
+                      "flex min-h-11 items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none",
+                      active
+                        ? "bg-indigo-100 text-indigo-800"
+                        : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
+                    )}
+                  >
+                    <Icon className="h-4 w-4" aria-hidden="true" />
+                    <span>{section.label}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          ) : null}
+        {MainBottom.map((item) => {
+          const Icon = item.icon;
+          const active = pathname.startsWith(item.href);
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={onNavigate}
+              className={cn(
+                "flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold transition",
+                active
+                  ? "bg-indigo-50 text-indigo-700"
+                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
               )}
             >
               <Icon className="h-5 w-5" />
@@ -198,7 +290,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             onClick={() => setOpen(false)}
           />
           <aside className="absolute inset-y-0 left-0 w-80 max-w-[86vw]">
-            <div className="absolute right-3 top-3 z-10">
+            <div className="absolute top-3 right-3 z-10">
               <Button
                 aria-label="Close navigation"
                 variant="ghost"

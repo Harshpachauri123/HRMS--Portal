@@ -1,8 +1,7 @@
 "use client"
 
 import {
-  ArrowDown,
-  ArrowUp,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
   CircleAlert,
@@ -35,13 +34,22 @@ import {
 } from "@/lib/settings-mock-data"
 import {
   cardClass,
-  ConfirmDialog,
   fieldClass,
-  StatusBadge,
-  type PendingConfirmation,
 } from "@/components/settings/settings-common"
 
 type UserDraft = Omit<SettingsUser, "id"> & { initialPassword: string }
+
+const userStatusStyles: Record<SettingsUser["status"], string> = {
+  Active: "border-emerald-200 bg-emerald-50 text-emerald-800",
+  Inactive: "border-slate-300 bg-slate-100 text-slate-700",
+  Suspended: "border-amber-200 bg-amber-50 text-amber-800",
+}
+
+const userStatusDots: Record<SettingsUser["status"], string> = {
+  Active: "bg-emerald-600",
+  Inactive: "bg-slate-500",
+  Suspended: "bg-amber-600",
+}
 
 function UserFormDialog({
   open,
@@ -99,7 +107,7 @@ function UserFormDialog({
       open={open}
       onOpenChange={onOpenChange}
       title={user ? "Edit user" : "Create staff user"}
-      description={user ? user.email : "Set an initial password for email sign-in and assign roles."}
+      description={user ? user.email : "Set an initial password for account sign-in and assign roles."}
       width="max-w-xl"
       footer={
         <>
@@ -138,8 +146,8 @@ function UserFormDialog({
           </div>
           {!user && <>
             <div className="space-y-1.5">
-              <Label htmlFor="settings-user-email">Email</Label>
-              <Input id="settings-user-email" type="email" required maxLength={254} value={draft.email} onChange={(event) => update("email", event.target.value)} />
+              <Label htmlFor="settings-user-email">Email / Employee ID</Label>
+              <Input id="settings-user-email" type="text" required maxLength={254} value={draft.email} onChange={(event) => update("email", event.target.value)} />
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="settings-user-password">Initial password</Label>
@@ -186,9 +194,6 @@ export function UsersSettings() {
   const [editingUser, setEditingUser] = React.useState<SettingsUser | null>(
     null
   )
-  const [pendingAction, setPendingAction] =
-    React.useState<PendingConfirmation | null>(null)
-  const [confirmationLoading, setConfirmationLoading] = React.useState(false)
   const [loading, setLoading] = React.useState(true)
   const [loadError, setLoadError] = React.useState(false)
   const pageSize = 5
@@ -238,29 +243,10 @@ export function UsersSettings() {
     setEditingUser(null)
   }
 
-  function askToToggleUser(user: SettingsUser) {
-    const nextStatus = user.status === "Active" ? "Inactive" : "Active"
-    setPendingAction({
-      title: `${nextStatus === "Active" ? "Activate" : "Deactivate"} ${user.name}?`,
-      description: `This will mark ${user.name}'s account as ${nextStatus.toLowerCase()} in this preview.`,
-      confirmLabel: `${nextStatus === "Active" ? "Activate" : "Deactivate"} user`,
-      destructive: nextStatus === "Inactive",
-      apply: () =>
-        setUsers((current) =>
-          current.map((item) =>
-            item.id === user.id ? { ...item, status: nextStatus } : item
-          )
-        ),
-    })
-  }
-
-  async function confirmAction() {
-    if (!pendingAction) return
-    setConfirmationLoading(true)
-    await new Promise((resolve) => window.setTimeout(resolve, 300))
-    pendingAction.apply()
-    setConfirmationLoading(false)
-    setPendingAction(null)
+  function updateUserStatus(userId: string, status: SettingsUser["status"]) {
+    setUsers((current) =>
+      current.map((user) => (user.id === userId ? { ...user, status } : user))
+    )
   }
 
   function retryLoad() {
@@ -290,7 +276,7 @@ export function UsersSettings() {
             <Input
               id="users-search"
               className="h-10 pl-9"
-              placeholder="Search by name or email..."
+              placeholder="Search by name, email, or employee ID..."
               value={search}
               onChange={(event) => setSearch(event.target.value)}
             />
@@ -392,11 +378,11 @@ export function UsersSettings() {
               <Table className="min-w-[760px] table-fixed">
                 <TableHeader>
                   <TableRow className="bg-slate-50 hover:bg-slate-50">
-                    <TableHead className="w-[28%] px-4">Name</TableHead>
-                    <TableHead className="w-[30%]">Email</TableHead>
-                    <TableHead className="w-[19%]">Roles</TableHead>
-                    <TableHead className="w-[13%]">Status</TableHead>
-                    <TableHead className="w-[10%] pr-4 text-right">
+                    <TableHead className="w-[25%] px-4">Name</TableHead>
+                    <TableHead className="w-[27%]">Email / Employee ID</TableHead>
+                    <TableHead className="w-[18%]">Roles</TableHead>
+                    <TableHead className="w-[18%]">Status</TableHead>
+                    <TableHead className="w-[12%] pr-4 text-right">
                       Actions
                     </TableHead>
                   </TableRow>
@@ -417,7 +403,31 @@ export function UsersSettings() {
                         <div className="flex flex-wrap gap-1">{user.roles.map((role) => <Badge key={role} variant="outline" className="border-indigo-100 bg-indigo-50 text-indigo-700">{role}</Badge>)}</div>
                       </TableCell>
                       <TableCell>
-                        <StatusBadge status={user.status} />
+                        <div className="relative inline-flex items-center">
+                          <span
+                            aria-hidden="true"
+                            className={`pointer-events-none absolute left-2.5 size-1.5 rounded-full ${userStatusDots[user.status]}`}
+                          />
+                          <select
+                            aria-label={`Status for ${user.name}`}
+                            value={user.status}
+                            onChange={(event) =>
+                              updateUserStatus(
+                                user.id,
+                                event.target.value as SettingsUser["status"]
+                              )
+                            }
+                            className={`h-8 w-[132px] cursor-pointer appearance-none rounded-full border py-1 pr-7 pl-6 text-xs font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${userStatusStyles[user.status]}`}
+                          >
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                            <option value="Suspended">Suspended</option>
+                          </select>
+                          <ChevronDown
+                            aria-hidden="true"
+                            className="pointer-events-none absolute right-2 size-3.5"
+                          />
+                        </div>
                       </TableCell>
                       <TableCell className="pr-4">
                         <div className="flex justify-end gap-1">
@@ -429,27 +439,6 @@ export function UsersSettings() {
                             onClick={() => openUserForm(user)}
                           >
                             Edit
-                          </Button>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            className={`h-9 cursor-pointer ${user.status === "Active" ? "text-rose-700 hover:text-rose-800" : "text-emerald-700 hover:text-emerald-800"}`}
-                            aria-label={`${user.status === "Active" ? "Deactivate" : "Activate"} ${user.name}`}
-                            onClick={() => askToToggleUser(user)}
-                          >
-                            {user.status === "Active" ? (
-                              <ArrowDown
-                                className="size-4"
-                                aria-hidden="true"
-                              />
-                            ) : (
-                              <ArrowUp className="size-4" aria-hidden="true" />
-                            )}
-                            <span className="hidden xl:inline">
-                              {user.status === "Active"
-                                ? "Deactivate"
-                                : "Activate"}
-                            </span>
                           </Button>
                         </div>
                       </TableCell>
@@ -504,12 +493,7 @@ export function UsersSettings() {
         onOpenChange={setFormOpen}
         onSave={saveUser}
       />
-      <ConfirmDialog
-        action={pendingAction}
-        onClose={() => setPendingAction(null)}
-        onConfirm={() => void confirmAction()}
-        loading={confirmationLoading}
-      />
     </div>
   )
 }
+

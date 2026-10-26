@@ -35,7 +35,8 @@ function Toast({ className, ...props }: ToastPrimitive.Root.Props) {
     <ToastPrimitive.Root
       data-slot="toast"
       className={cn(
-        "group/toast pointer-events-auto absolute right-0 bottom-0 z-[calc(1000-var(--toast-index))] w-full origin-bottom rounded-2xl border bg-popover text-popover-foreground shadow-lg will-change-transform outline-none select-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50",
+        "group/toast pointer-events-auto absolute right-0 bottom-0 z-[calc(1000-var(--toast-index))] w-full origin-bottom rounded-2xl border border-lime-500 bg-gradient-to-br from-lime-300 via-green-400 to-emerald-500 text-emerald-950 shadow-lg shadow-green-950/20 will-change-transform outline-none select-none focus-visible:border-emerald-800 focus-visible:ring-[3px] focus-visible:ring-emerald-700/50",
+        "before:absolute before:inset-y-0 before:left-0 before:w-1 before:rounded-l-2xl before:bg-emerald-800 before:opacity-70",
         "[--gap:0.75rem] [--height:var(--toast-frontmost-height,var(--toast-height))] [--offset-y:calc(var(--toast-offset-y)*-1+calc(var(--toast-index)*var(--gap)*-1)+var(--toast-swipe-movement-y))] [--peek:0.75rem] [--scale:calc(max(0,1-(var(--toast-index)*0.1)))] [--shrink:calc(1-var(--scale))]",
         "h-(--height) [transform:translateX(var(--toast-swipe-movement-x))_translateY(calc(var(--toast-swipe-movement-y)-(var(--toast-index)*var(--peek))-(var(--shrink)*var(--height))))_scale(var(--scale))] [transition:transform_500ms_cubic-bezier(0.22,1,0.36,1),opacity_500ms,height_150ms]",
         "after:absolute after:top-full after:left-0 after:h-[calc(var(--gap)+1px)] after:w-full after:content-['']",
@@ -74,7 +75,7 @@ function ToastTitle({ className, ...props }: ToastPrimitive.Title.Props) {
   return (
     <ToastPrimitive.Title
       data-slot="toast-title"
-      className={cn("text-sm font-medium", className)}
+      className={cn("text-sm font-semibold text-emerald-950", className)}
       {...props}
     />
   )
@@ -87,7 +88,7 @@ function ToastDescription({
   return (
     <ToastPrimitive.Description
       data-slot="toast-description"
-      className={cn("text-sm text-muted-foreground", className)}
+      className={cn("text-sm text-emerald-950/80", className)}
       {...props}
     />
   )
@@ -120,7 +121,7 @@ function ToastClose({
       aria-label="Close toast"
       render={render}
       className={cn(
-        "relative shrink-0 text-muted-foreground after:absolute after:-inset-2 after:content-[''] hover:text-foreground",
+        "relative shrink-0 text-emerald-950/75 after:absolute after:-inset-2 after:content-[''] hover:text-emerald-950",
         className
       )}
       {...props}
@@ -172,7 +173,10 @@ function ToastIcon({ type }: { type: string | undefined }) {
   return (
     <span
       data-slot="toast-icon"
-      className="shrink-0 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4"
+      className={cn(
+        "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ring-1 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-5",
+        "bg-emerald-800 text-white ring-emerald-950/20"
+      )}
     >
       {icon}
     </span>
@@ -183,7 +187,7 @@ function ToastList() {
   const { toasts } = ToastPrimitive.useToastManager()
 
   return toasts.map((toastItem) => (
-    <Toast key={toastItem.id} toast={toastItem}>
+    <Toast key={toastItem.id} toast={toastItem} data-type={toastItem.type}>
       <ToastContent>
         <ToastIcon type={toastItem.type} />
         <div className="flex min-w-0 flex-1 flex-col gap-1">

@@ -12,6 +12,7 @@ import {
   LogOut,
   ShieldCheck,
 } from "lucide-react";
+import { toast } from "@workspace/ui/components/toast";
 
 interface AttendanceRecord {
   date: string;
@@ -130,6 +131,11 @@ export default function AttendancePage() {
     ]);
     setSelectedDate(todayKey);
     setMonth(new Date(now.getFullYear(), now.getMonth(), 1));
+    toast.add({
+      title: "Attendance started",
+      description: "Your check-in time has been recorded.",
+      type: "success",
+    });
   }
 
   function handlePunchOut() {
@@ -142,6 +148,11 @@ export default function AttendancePage() {
           : record,
       ),
     );
+    toast.add({
+      title: "Attendance ended",
+      description: "Your check-out time has been recorded.",
+      type: "success",
+    });
   }
 
   function moveMonth(amount: number) {
@@ -175,6 +186,11 @@ export default function AttendancePage() {
     link.download = `attendance-${getDateKey(month).slice(0, 7)}.csv`;
     link.click();
     URL.revokeObjectURL(url);
+    toast.add({
+      title: "Attendance exported",
+      description: `Attendance data for ${getDateKey(month).slice(0, 7)} was downloaded.`,
+      type: "success",
+    });
   }
 
   return (

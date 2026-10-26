@@ -21,6 +21,7 @@ import {
   useCandidateRecords,
 } from "@/lib/session-records"
 import { MotionConfig, motion } from "motion/react"
+import { toast } from "@workspace/ui/components/toast"
 import {
   useEffect,
   useRef,
@@ -88,6 +89,8 @@ type CandidateDetails = {
   accountNo: string
   ifscCode: string
   branchName: string
+  companyName: string
+  jobId: string
 }
 
 type FormFieldConfig = {
@@ -241,58 +244,9 @@ const fieldGroups: FieldGroup[] = [
       },
       {
         name: "joiningDate",
-        label: "Application date",
+        label: "Applying date",
         type: "date",
         placeholder: "",
-      },
-    ],
-  },
-  {
-    title: "3. Identity & Statutory (KYC)",
-    fields: [
-      {
-        name: "aadharNo",
-        label: "Aadhaar number",
-        type: "text",
-        inputMode: "numeric",
-        placeholder: "12-digit Aadhaar number",
-        maxLength: 14,
-        helperText: "12-digit UIDAI identity number.",
-      },
-      {
-        name: "panNo",
-        label: "PAN card number",
-        type: "text",
-        placeholder: "10-character PAN (e.g. ABCDE1234F)",
-        maxLength: 10,
-        helperText: "Permanent Account Number.",
-      },
-    ],
-  },
-  {
-    title: "4. Bank Account Details",
-    fields: [
-      {
-        name: "accountNo",
-        label: "Bank account number",
-        type: "text",
-        placeholder: "Enter salary bank account number",
-        maxLength: 20,
-      },
-      {
-        name: "ifscCode",
-        label: "IFSC code",
-        type: "text",
-        placeholder: "e.g. SBIN0001234",
-        maxLength: 11,
-        helperText: "11-character bank branch IFSC code.",
-      },
-      {
-        name: "branchName",
-        label: "Branch name",
-        type: "text",
-        placeholder: "Bank branch name & city",
-        colSpan: true,
       },
     ],
   },
@@ -321,6 +275,8 @@ function readDetails(formData: FormData): CandidateDetails {
     accountNo: String(formData.get("accountNo") ?? "").trim(),
     ifscCode: String(formData.get("ifscCode") ?? "").trim(),
     branchName: String(formData.get("branchName") ?? "").trim(),
+    companyName: String(formData.get("companyName") ?? "").trim(),
+    jobId: String(formData.get("jobId") ?? "").trim(),
   }
 }
 
@@ -558,7 +514,17 @@ function CandidateResumeUpload({
   )
 }
 
-export default function AddCandidatePage() {
+type JobApplication = {
+  company: string
+  jobId: string
+  position: string
+}
+
+export default function AddCandidatePage({
+  initialJobApplication,
+}: {
+  initialJobApplication?: JobApplication
+} = {}) {
   const candidateRecords = useCandidateRecords()
   const [recordId, setRecordId] = useState<string | null>(null)
   const [formReady, setFormReady] = useState(false)
@@ -568,12 +534,25 @@ export default function AddCandidatePage() {
   const [details, setDetails] = useState<CandidateDetails | null>(null)
   const [resume, setResume] = useState<File | null>(null)
   const [documents, setDocuments] = useState<Record<string, File>>({})
+  const [jobApplication, setJobApplication] = useState({
+    company: "",
+    jobId: "",
+    position: "",
+  })
   const editingRecord = candidateRecords.find((record) => record.id === recordId)
 
   useEffect(() => {
-    setRecordId(new URLSearchParams(window.location.search).get("edit"))
+    const params = new URLSearchParams(window.location.search)
+    setRecordId(params.get("edit"))
+    setJobApplication(
+      initialJobApplication ?? {
+        company: params.get("company") ?? "",
+        jobId: params.get("jobId") ?? "",
+        position: params.get("position") ?? "",
+      }
+    )
     setFormReady(true)
-  }, [])
+  }, [initialJobApplication])
 
   function handleDocumentChange(id: string, file: File | null) {
     setDocuments((prev) => {
@@ -591,6 +570,11 @@ export default function AddCandidatePage() {
     event.preventDefault()
     setDetails(readDetails(new FormData(event.currentTarget)))
     setStep("review")
+    toast.add({
+      title: "Application ready to review",
+      description: "Check the candidate details before confirming.",
+      type: "success",
+    })
   }
 
   function handleConfirm() {
@@ -604,6 +588,11 @@ export default function AddCandidatePage() {
     ]
     saveCandidateRecord({ ...details }, documentNames, recordId ?? undefined)
     setStep("submitted")
+    toast.add({
+      title: "Application submitted",
+      description: "Candidate details have been saved for this session.",
+      type: "success",
+    })
   }
 
   if (recordId && formReady && !editingRecord) {
@@ -613,9 +602,6 @@ export default function AddCandidatePage() {
         <p className="mt-2 text-sm text-slate-600">
           This demo record is held only for the current session. Return to the candidate list and try again.
         </p>
-        <Link href="/candidates" className="mt-4 inline-flex font-semibold text-sky-700 hover:underline">
-          Back to candidates
-        </Link>
       </main>
     )
   }
@@ -637,13 +623,6 @@ export default function AddCandidatePage() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.25 }}
         >
-          <Link
-            href="/candidates"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 transition hover:text-sky-700"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to candidates
-          </Link>
         </motion.div>
 
         <motion.header
@@ -713,7 +692,7 @@ export default function AddCandidatePage() {
         </motion.header>
 
         <motion.form
-          key={recordId ?? "new-candidate"}
+          key={recordId ?? jobApplication.jobId ?? "new-candidate"}
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           onSubmit={handleReview}
@@ -721,6 +700,33 @@ export default function AddCandidatePage() {
             step === "editing" ? "" : "hidden"
           }`}
         >
+          {jobApplication.jobId ? (
+            <section className="rounded-2xl border border-sky-200 bg-white px-5 py-4 shadow-sm xl:col-span-2">
+              <h2 className="text-sm font-bold text-slate-900">
+                Applying for this position
+              </h2>
+              <dl className="mt-3 grid gap-3 text-sm sm:grid-cols-2">
+                <div>
+                  <dt className="text-xs font-semibold uppercase text-slate-500">
+                    Company name
+                  </dt>
+                  <dd className="mt-1 font-medium text-slate-900">
+                    {jobApplication.company}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-xs font-semibold uppercase text-slate-500">
+                    Job ID
+                  </dt>
+                  <dd className="mt-1 font-medium text-slate-900">
+                    {jobApplication.jobId}
+                  </dd>
+                </div>
+              </dl>
+            </section>
+          ) : null}
+          <input type="hidden" name="companyName" value={jobApplication.company} />
+          <input type="hidden" name="jobId" value={jobApplication.jobId} />
           <div className="space-y-6">
             <section className="overflow-hidden rounded-3xl border border-white/80 bg-white/95 shadow-lg shadow-sky-950/5 backdrop-blur-sm">
               <div className="flex items-start gap-3 border-b border-sky-100/80 bg-gradient-to-r from-white via-sky-50/60 to-blue-50/40 px-5 py-5 sm:px-7">
@@ -798,7 +804,27 @@ export default function AddCandidatePage() {
                               pattern={field.pattern}
                               inputMode={field.inputMode}
                               placeholder={field.placeholder}
-                              defaultValue={editingRecord?.details[field.name] ?? ""}
+                              value={
+                                field.name === "designation"
+                                  ? editingRecord?.details.designation ?? jobApplication.position
+                                  : undefined
+                              }
+                              defaultValue={
+                                field.name === "designation"
+                                  ? undefined
+                                  : editingRecord?.details[field.name] ?? ""
+                              }
+                              onChange={
+                                field.name === "designation"
+                                  ? (event) => {
+                                      const position = event.currentTarget.value
+                                      setJobApplication((current) => ({
+                                        ...current,
+                                        position,
+                                      }))
+                                    }
+                                  : undefined
+                              }
                               className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-900 transition outline-none placeholder:text-slate-400 focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
                             />
                           )}
@@ -1170,16 +1196,9 @@ export default function AddCandidatePage() {
               Candidate details confirmed
             </h2>
             <p className="mt-3 max-w-md text-sm leading-6 text-slate-500">
-              This is a demo form. Candidate details, documents, and resume have
-              been reviewed in this session.
+              Your candidate details and documents have been successfullys submitted.
+            
             </p>
-            <Link
-              href="/candidates"
-              className="mt-7 inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-sky-600 px-5 text-sm font-semibold text-white shadow-sm transition hover:bg-sky-700"
-            >
-              Back to candidates
-              <ArrowRight className="h-4 w-4" />
-            </Link>
           </motion.section>
         ) : null}
       </main>

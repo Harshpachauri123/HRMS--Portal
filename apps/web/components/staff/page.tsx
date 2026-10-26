@@ -2,7 +2,8 @@
 
 import Link from "next/link"
 import { AnimatePresence, MotionConfig, motion } from "motion/react"
-import { PDFDocument, StandardFonts, rgb } from "pdf-lib"
+import { createProfilePdf } from "@/lib/profile-pdf"
+import { toast } from "@workspace/ui/components/toast"
 import { useEffect, useMemo, useState } from "react"
 import {
   ArrowUpRight,
@@ -40,6 +41,7 @@ type Employee = {
   employmentType: string
   status: string
   documents: string[]
+  formDetails?: FormRecord
 }
 
 const demoEmployees: Employee[] = [
@@ -277,120 +279,31 @@ function staffDetailsFromEmployee(employee: Employee): FormRecord {
 }
 
 async function createEmployeePdf(employee: Employee) {
-  const pdf = await PDFDocument.create()
-  const page = pdf.addPage([595.28, 841.89])
-  const regular = await pdf.embedFont(StandardFonts.Helvetica)
-  const bold = await pdf.embedFont(StandardFonts.HelveticaBold)
-  const ink = rgb(0.09, 0.13, 0.22)
-  const muted = rgb(0.38, 0.43, 0.51)
-  const accent = rgb(0.29, 0.32, 0.87)
-
-  page.drawText("EMPLOYEE PROFILE", {
-    x: 48,
-    y: 782,
-    size: 19,
-    font: bold,
-    color: ink,
+  const details = employee.formDetails ?? staffDetailsFromEmployee(employee)
+  const value = (key: string, fallback = "") => details[key as keyof typeof details] ?? fallback
+  return createProfilePdf({
+    title: "Employee profile",
+    name: employee.name,
+    id: employee.empId,
+    documentTitle: "Uploaded documents",
+    documents: employee.documents,
+    sections: [
+      { title: "Personal & contact details", fields: [
+        ["First name", value("firstname", employee.name.split(/\s+/)[0] ?? "")], ["Last name", value("lastname", employee.name.split(/\s+/).slice(1).join(" "))],
+        ["Employee ID", value("employeeId", employee.empId)], ["Father's name", value("fatherName", employee.fatherName)],
+        ["Contact number", value("contactNumber", employee.phone)], ["Email address", value("email", employee.email)],
+        ["Marital status", value("maritalStatus")], ["Nationality", value("nationality")], ["Highest qualification", value("qualification")],
+        ["Date of birth", value("dateofbirth")], ["Permanent address", value("permanentAddress")],
+      ] },
+      { title: "Role & employment details", fields: [
+        ["Department", value("department", employee.dept)], ["Designation", value("designation", employee.designation)],
+        ["Employee type", value("employeeType", employee.employmentType)], ["Joining date", value("joiningDate", employee.date)],
+        ["Manager", employee.manager], ["Status", employee.status],
+      ] },
+      { title: "Identity & statutory details", fields: [["Aadhaar number", value("aadharNo")], ["PAN card number", value("panNo")]] },
+      { title: "Bank account details", fields: [["Bank account number", value("accountNo")], ["IFSC code", value("ifscCode")], ["Branch name", value("branchName")]] },
+    ],
   })
-  page.drawText("DEMO RECORD", {
-    x: 443,
-    y: 788,
-    size: 8,
-    font: bold,
-    color: accent,
-  })
-  page.drawText(`${employee.name}  |  ${employee.empId}`, {
-    x: 48,
-    y: 752,
-    size: 11,
-    font: regular,
-    color: muted,
-  })
-  page.drawLine({
-    start: { x: 48, y: 736 },
-    end: { x: 547, y: 736 },
-    thickness: 1,
-    color: rgb(0.88, 0.9, 0.93),
-  })
-
-  const rows: [string, string][] = [
-    ["Employee ID", employee.empId],
-    ["Full name", employee.name],
-    ["Father's name", employee.fatherName],
-    ["Contact number", employee.phone],
-    ["Email address", employee.email],
-    ["Department", employee.dept],
-    ["Designation", employee.designation],
-    ["Manager", employee.manager],
-    ["Joining date", employee.date],
-    ["Employment type", employee.employmentType],
-    ["Status", employee.status],
-  ]
-
-  let y = 704
-  for (const [label, value] of rows) {
-    page.drawText(label, {
-      x: 48,
-      y,
-      size: 9,
-      font: bold,
-      color: muted,
-    })
-    page.drawText(value, {
-      x: 205,
-      y,
-      size: 10,
-      font: regular,
-      color: ink,
-      maxWidth: 340,
-    })
-    y -= 30
-  }
-
-  y -= 5
-  page.drawText("UPLOADED DOCUMENTS", {
-    x: 48,
-    y,
-    size: 11,
-    font: bold,
-    color: ink,
-  })
-  y -= 23
-  if (employee.documents.length) {
-    for (const document of employee.documents) {
-      page.drawText(`- ${document}`, {
-        x: 52,
-        y,
-        size: 9,
-        font: regular,
-        color: muted,
-      })
-      y -= 17
-    }
-  } else {
-    page.drawText("No uploaded documents are available in this demo record.", {
-      x: 52,
-      y,
-      size: 9,
-      font: regular,
-      color: muted,
-    })
-  }
-
-  page.drawText(
-    "Demo data only. Employee records and documents are not connected to HRMS storage.",
-    {
-      x: 48,
-      y: 38,
-      size: 8,
-      font: regular,
-      color: muted,
-      maxWidth: 500,
-    }
-  )
-
-  const bytes = await pdf.save()
-  return new Blob([bytes as BlobPart], { type: "application/pdf" })
 }
 
 export default function StaffPage() {
@@ -449,6 +362,7 @@ export default function StaffPage() {
             details.employeeType || original?.employmentType || "",
           status: original?.status || "Active",
           documents: record.documents,
+          formDetails: details,
         }
       }),
       ...demoEmployees.filter(
@@ -495,6 +409,11 @@ export default function StaffPage() {
       anchor.click()
       anchor.remove()
       window.setTimeout(() => URL.revokeObjectURL(url), 1000)
+      toast.add({
+        title: "Employee profile downloaded",
+        description: `${employee.name}'s profile PDF is ready.`,
+        type: "success",
+      })
     } catch {
       setDownloadError(
         `Could not create the PDF for ${employee.name}. Please try again.`
@@ -514,6 +433,11 @@ export default function StaffPage() {
         url,
         title: `${employee.name} · Employee profile`,
         filename: `${employee.empId}-${employee.name.replaceAll(" ", "-")}.pdf`,
+      })
+      toast.add({
+        title: "Employee profile opened",
+        description: `${employee.name}'s PDF preview is ready.`,
+        type: "success",
       })
     } catch {
       setDownloadError(
@@ -793,6 +717,11 @@ export default function StaffPage() {
                             onClick={() => {
                               if (window.confirm(`Delete ${employee.name}?`)) {
                                 deleteStaffRecord(editId)
+                                toast.add({
+                                  title: "Employee deleted",
+                                  description: `${employee.name}'s employee record was removed.`,
+                                  type: "success",
+                                })
                               }
                             }}
                             aria-label={`Delete ${employee.name}`}

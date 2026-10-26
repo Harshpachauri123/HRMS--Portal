@@ -1,5 +1,5 @@
+import AddCandidatePage from "@/components/candidatemanagement/addcandidate/page"
 import type { Metadata } from "next"
-import AddCandidatePage from "@/components/addcandidate/page"
 
 export const metadata: Metadata = {
   title: "Add Candidate - HRMS Portal",

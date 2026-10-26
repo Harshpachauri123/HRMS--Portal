@@ -20,6 +20,7 @@ import {
   useStaffRecords,
 } from "@/lib/session-records"
 import { MotionConfig, motion } from "motion/react"
+import { toast } from "@workspace/ui/components/toast"
 import {
   useEffect,
   useRef,
@@ -471,6 +472,11 @@ export default function AddStaffPage() {
     event.preventDefault()
     setDetails(readDetails(new FormData(event.currentTarget)))
     setStep("review")
+    toast.add({
+      title: "Employee details ready to review",
+      description: "Check the information before confirming.",
+      type: "success",
+    })
   }
 
   function handleConfirm() {
@@ -483,6 +489,11 @@ export default function AddStaffPage() {
     ]
     saveStaffRecord({ ...details }, documentNames, recordId ?? undefined)
     setStep("submitted")
+    toast.add({
+      title: "Employee details saved",
+      description: "The employee profile has been saved for this session.",
+      type: "success",
+    })
   }
 
   if (recordId && formReady && !editingRecord) {
