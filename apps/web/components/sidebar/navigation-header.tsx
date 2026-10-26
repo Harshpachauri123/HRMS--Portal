@@ -36,7 +36,7 @@ export function NavigationHeader({
     .toUpperCase() || "U";
 
   return (
-    <header className="sticky top-0 z-20 flex min-h-18 items-center justify-between border-b border-slate-200 bg-white px-4 py-3 sm:px-6 lg:px-7">
+    <header className="sticky top-0 z-20 flex min-h-18 items-center justify-between border-b border-[#ead9ae] bg-[#fff9e8] px-4 py-3 sm:px-6 lg:px-7">
       <div className="flex min-w-0 items-center gap-3">
         <Button
           aria-label="Open navigation"
@@ -65,7 +65,7 @@ export function NavigationHeader({
           suppressHydrationWarning
           type="button"
           aria-label="Notifications"
-          className="relative inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:bg-slate-50 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
+          className="relative inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-[#ead9ae] bg-[#fffdf5] text-slate-700 shadow-sm transition hover:border-lime-300 hover:bg-lime-100 hover:text-green-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-600 focus-visible:ring-offset-2"
         >
           <Bell className="h-5 w-5" />
           <span className="absolute right-2.5 top-2.5 h-2.5 w-2.5 rounded-full border-2 border-white bg-rose-500" />
@@ -78,9 +78,9 @@ export function NavigationHeader({
               aria-expanded={menuOpen}
               aria-haspopup="menu"
               onClick={onToggleMenu}
-              className="flex min-h-12 items-center gap-2 rounded-full border border-indigo-100 bg-indigo-50 py-1 pl-1 pr-3 text-left transition hover:bg-indigo-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
+              className="flex min-h-12 items-center gap-2 rounded-full border border-[#ead9ae] bg-[#fff2d2] py-1 pl-1 pr-3 text-left transition hover:border-lime-300 hover:bg-lime-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-600 focus-visible:ring-offset-2"
             >
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-500 text-sm font-bold text-white shadow-sm">
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-lime-700 text-sm font-bold text-white shadow-sm">
                 {initials}
               </span>
               <span className="hidden min-w-0 sm:block">
@@ -104,7 +104,7 @@ export function NavigationHeader({
                 />
                 <div
                   role="menu"
-                  className="absolute right-0 z-40 mt-2 w-72 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl shadow-slate-900/10"
+                  className="absolute right-0 z-40 mt-2 w-72 overflow-hidden rounded-2xl border border-[#ead9ae] bg-[#fffdf5] shadow-xl shadow-slate-900/10"
                 >
                   <div className="border-b border-slate-200 px-4 py-3">
                     <p className="truncate text-sm font-semibold text-slate-900">{user.name}</p>
@@ -117,7 +117,7 @@ export function NavigationHeader({
                     href="/profile"
                     role="menuitem"
                     onClick={onCloseMenu}
-                    className="flex min-h-11 items-center gap-2 px-4 text-sm font-medium text-slate-800 transition hover:bg-slate-50 focus-visible:bg-slate-50 focus-visible:outline-none"
+                    className="flex min-h-11 items-center gap-2 px-4 text-sm font-medium text-slate-800 transition hover:bg-lime-100 hover:text-green-950 focus-visible:bg-lime-100 focus-visible:outline-none"
                   >
                     <UserRound className="h-4 w-4 text-slate-500" />
                     Profile &amp; password
@@ -127,7 +127,7 @@ export function NavigationHeader({
                     role="menuitem"
                     disabled={isLoggingOut || !isLoaded}
                     onClick={onLogout}
-                    className="flex min-h-11 w-full items-center gap-2 border-t border-slate-100 px-4 text-left text-sm font-medium text-slate-800 transition hover:bg-slate-50 focus-visible:bg-slate-50 focus-visible:outline-none disabled:opacity-60"
+                    className="flex min-h-11 w-full items-center gap-2 border-t border-[#ead9ae] px-4 text-left text-sm font-medium text-slate-800 transition hover:bg-lime-100 hover:text-green-950 focus-visible:bg-lime-100 focus-visible:outline-none disabled:opacity-60"
                   >
                     <LogOut className="h-4 w-4 text-slate-500" />
                     {isLoggingOut ? "Logging out..." : "Log out"}

@@ -14,13 +14,13 @@ export function SettingsButton({
 }) {
   const styles = {
     default:
-      "border border-indigo-700 bg-indigo-700 text-white hover:border-indigo-800 hover:bg-indigo-800",
+      "border border-lime-600 bg-lime-600 text-slate-950 hover:border-lime-400 hover:bg-lime-400",
     primary:
-      "border border-indigo-700 bg-indigo-700 text-white hover:border-indigo-800 hover:bg-indigo-800",
+      "border border-lime-600 bg-lime-600 text-slate-950 hover:border-lime-400 hover:bg-lime-400",
     outline:
-      "border border-slate-300 bg-white text-slate-800 hover:border-slate-400 hover:bg-slate-50",
+      "border border-slate-300 bg-[#fbfdf6] text-slate-800 hover:border-lime-400 hover:bg-lime-100",
     ghost:
-      "border border-transparent bg-transparent text-slate-700 hover:bg-slate-100",
+      "border border-transparent bg-transparent text-slate-700 hover:bg-lime-100",
     danger:
       "border border-rose-700 bg-rose-700 text-white hover:border-rose-800 hover:bg-rose-800",
     destructive:
@@ -30,7 +30,7 @@ export function SettingsButton({
   return (
     <button
       type={type}
-      className={`inline-flex min-h-10 items-center justify-center gap-2 rounded-lg px-3.5 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 ${styles[variant]} ${className}`}
+      className={`inline-flex min-h-10 items-center justify-center gap-2 rounded-lg px-3.5 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-lime-600 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 ${styles[variant]} ${className}`}
       {...props}
     />
   )
@@ -42,7 +42,7 @@ export function SettingsInput({
 }: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input
-      className={`h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900 transition outline-none placeholder:text-slate-400 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/20 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500 ${className}`}
+      className={`h-10 w-full rounded-lg border border-slate-300 bg-[#fbfdf6] px-3 text-sm text-slate-900 transition outline-none placeholder:text-slate-400 focus:border-lime-600 focus:ring-2 focus:ring-lime-600/20 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500 ${className}`}
       {...props}
     />
   )
@@ -69,7 +69,7 @@ export function SettingsBadge({
 }) {
   const styles = {
     neutral: "border-slate-300 bg-slate-100 text-slate-800",
-    indigo: "border-indigo-200 bg-indigo-50 text-indigo-800",
+    indigo: "border-lime-200 bg-lime-50 text-lime-800",
     success: "border-emerald-200 bg-emerald-50 text-emerald-800",
     outline: "border-slate-300 bg-white text-slate-800",
   }
@@ -222,7 +222,7 @@ export function SettingsDialog({
           type="button"
           aria-label="Close dialog"
           onClick={() => onOpenChange(false)}
-          className="flex size-9 shrink-0 items-center justify-center rounded-lg text-slate-500 transition hover:bg-slate-100 hover:text-slate-900 focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:outline-none"
+          className="flex size-9 shrink-0 items-center justify-center rounded-lg text-slate-500 transition hover:bg-slate-100 hover:text-slate-900 focus-visible:ring-2 focus-visible:ring-lime-600 focus-visible:outline-none"
         >
           <X className="size-4" aria-hidden="true" />
         </button>

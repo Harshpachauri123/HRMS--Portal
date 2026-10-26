@@ -5,6 +5,7 @@ export type JobOpening = {
   company: string
   position: string
   experience: string
+  responsibilities: string
 }
 
 export const defaultJobOpenings: JobOpening[] = [
@@ -12,7 +13,8 @@ export const defaultJobOpenings: JobOpening[] = [
     id: "job_101",
     company: "tata-technologies",
     position: "Software Developer Opening",
-    experience: "2-4 Years",
+    experience: "2-3 years",
+    responsibilities: "Build and maintain reliable software features. Collaborate with product and engineering teams, review code, and contribute to technical documentation.",
   },
 ]
 

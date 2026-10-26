@@ -347,8 +347,8 @@ function DocumentUpload({
       <div
         className={`flex min-h-[94px] items-center gap-3 rounded-xl border p-3 transition ${
           file
-            ? "border-sky-200 bg-sky-50/60"
-            : "border-dashed border-slate-300 bg-white hover:border-sky-300 hover:bg-sky-50/30"
+            ? "border-lime-200 bg-lime-50/60"
+            : "border-dashed border-slate-300 bg-[#f6faef] hover:border-lime-300 hover:bg-lime-50/30"
         }`}
       >
         {file && previewUrl ? (
@@ -361,7 +361,7 @@ function DocumentUpload({
         ) : (
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-500">
             {file ? (
-              <FileText className="h-5 w-5 text-sky-700" />
+              <FileText className="h-5 w-5 text-lime-700" />
             ) : (
               <Upload className="h-5 w-5" />
             )}
@@ -373,18 +373,18 @@ function DocumentUpload({
           </p>
           {file ? (
             <p className="mt-1 truncate text-xs text-slate-500">
-              {file.name} · {(file.size / (1024 * 1024)).toFixed(2)} MB
+              {file.name} ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· {(file.size / (1024 * 1024)).toFixed(2)} MB
             </p>
           ) : (
             <p className="mt-1 text-xs text-slate-500">
-              JPG, PNG, WebP or PDF · up to 10 MB
+              JPG, PNG, WebP or PDF ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· up to 10 MB
             </p>
           )}
           <button
             type="button"
             onClick={() => inputRef.current?.click()}
             aria-label={`${file ? "Replace" : "Browse files for"} ${label}`}
-            className="mt-2 inline-flex cursor-pointer items-center gap-1 rounded-sm text-xs font-semibold text-sky-700 hover:text-sky-800 focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:outline-none"
+            className="mt-2 inline-flex cursor-pointer items-center gap-1 rounded-sm text-xs font-semibold text-lime-700 hover:text-lime-800 focus-visible:ring-2 focus-visible:ring-lime-400 focus-visible:outline-none"
           >
             {file ? "Replace file" : "Browse files"}
             <ArrowRight className="h-3 w-3" aria-hidden="true" />
@@ -395,7 +395,7 @@ function DocumentUpload({
             type="button"
             onClick={removeFile}
             aria-label={`Remove ${label}`}
-            className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-lg text-slate-400 transition hover:bg-white hover:text-rose-600"
+            className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-lg text-slate-400 transition hover:bg-[#f6faef] hover:text-rose-600"
           >
             <X className="h-4 w-4" />
           </button>
@@ -457,16 +457,16 @@ function CandidateResumeUpload({
       <div
         className={`rounded-2xl border-2 border-dashed p-5 transition sm:p-6 ${
           file
-            ? "border-sky-300 bg-sky-50/70"
-            : "border-slate-300 bg-slate-50/80 hover:border-sky-300 hover:bg-sky-50/40"
+            ? "border-lime-300 bg-lime-50/70"
+            : "border-slate-300 bg-slate-50/80 hover:border-lime-300 hover:bg-lime-50/40"
         }`}
       >
         <div className="flex flex-col items-center text-center">
           <span
             className={`flex h-12 w-12 items-center justify-center rounded-2xl ${
               file
-                ? "bg-sky-100 text-sky-700"
-                : "bg-white text-slate-500 shadow-sm"
+                ? "bg-lime-100 text-lime-700"
+                : "bg-[#f6faef] text-slate-500 shadow-sm"
             }`}
           >
             {file ? (
@@ -481,13 +481,13 @@ function CandidateResumeUpload({
           <p className="mt-1 text-xs text-slate-500">
             {file
               ? `${(file.size / (1024 * 1024)).toFixed(2)} MB`
-              : "PDF, DOC, or DOCX · up to 10 MB"}
+              : "PDF, DOC, or DOCX ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· up to 10 MB"}
           </p>
           <div className="mt-4 flex flex-wrap justify-center gap-2">
             <button
               type="button"
               onClick={() => inputRef.current?.click()}
-              className="inline-flex h-9 cursor-pointer items-center gap-2 rounded-lg bg-sky-600 px-3.5 text-xs font-semibold text-white transition hover:bg-sky-700 focus-visible:ring-4 focus-visible:ring-sky-200 focus-visible:outline-none"
+              className="inline-flex h-9 cursor-pointer items-center gap-2 rounded-lg bg-lime-600 px-3.5 text-xs font-semibold text-white transition hover:bg-lime-400 hover:text-green-950 focus-visible:ring-4 focus-visible:ring-lime-200 focus-visible:outline-none"
             >
               <Upload className="h-3.5 w-3.5" />
               {file ? "Replace resume" : "Choose resume"}
@@ -496,7 +496,7 @@ function CandidateResumeUpload({
               <button
                 type="button"
                 onClick={removeResume}
-                className="inline-flex h-9 cursor-pointer items-center gap-2 rounded-lg border border-slate-200 bg-white px-3.5 text-xs font-semibold text-slate-600 transition hover:border-rose-200 hover:text-rose-700"
+                className="inline-flex h-9 cursor-pointer items-center gap-2 rounded-lg border border-slate-200 bg-[#fbfdf6] px-3.5 text-xs font-semibold text-slate-600 transition hover:border-rose-200 hover:text-rose-700"
               >
                 <X className="h-3.5 w-3.5" />
                 Remove
@@ -518,6 +518,8 @@ type JobApplication = {
   company: string
   jobId: string
   position: string
+  experience?: string
+  responsibilities?: string
 }
 
 export default function AddCandidatePage({
@@ -538,19 +540,21 @@ export default function AddCandidatePage({
     company: "",
     jobId: "",
     position: "",
+    experience: "",
+    responsibilities: "",
   })
   const editingRecord = candidateRecords.find((record) => record.id === recordId)
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     setRecordId(params.get("edit"))
-    setJobApplication(
-      initialJobApplication ?? {
-        company: params.get("company") ?? "",
-        jobId: params.get("jobId") ?? "",
-        position: params.get("position") ?? "",
-      }
-    )
+    setJobApplication({
+      company: initialJobApplication?.company ?? params.get("company") ?? "",
+      jobId: initialJobApplication?.jobId ?? params.get("jobId") ?? "",
+      position: initialJobApplication?.position ?? params.get("position") ?? "",
+      experience: initialJobApplication?.experience ?? params.get("experience") ?? "",
+      responsibilities: initialJobApplication?.responsibilities ?? params.get("responsibilities") ?? "",
+    })
     setFormReady(true)
   }, [initialJobApplication])
 
@@ -608,14 +612,14 @@ export default function AddCandidatePage({
 
   return (
     <MotionConfig reducedMotion="user">
-      <main className="relative isolate mx-auto max-w-6xl space-y-6 overflow-hidden rounded-[30px] border border-sky-100/80 bg-gradient-to-br from-slate-50 via-sky-50 to-blue-50/70 p-4 pb-10 sm:p-6 lg:p-7">
+      <main className="relative isolate mx-auto max-w-6xl space-y-6 overflow-hidden rounded-[30px] border border-[#d5e4bf] bg-[#f6faed] p-4 pb-10 sm:p-6 lg:p-7" style={{ backgroundImage: "linear-gradient(to right, rgba(132, 204, 22, 0.075) 1px, transparent 1px), linear-gradient(to bottom, rgba(132, 204, 22, 0.075) 1px, transparent 1px)", backgroundSize: "28px 28px" }}>
         <div
           className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
           aria-hidden="true"
         >
-          <div className="absolute -top-28 -right-24 h-88 w-88 rounded-full bg-sky-300/30 blur-3xl" />
-          <div className="absolute top-[34rem] -left-28 h-80 w-80 rounded-full bg-blue-300/20 blur-3xl" />
-          <div className="absolute right-1/4 bottom-10 h-64 w-64 rounded-full bg-cyan-200/25 blur-3xl" />
+          <div className="absolute -top-28 -right-24 h-88 w-88 rounded-full bg-lime-300/30 blur-3xl" />
+          <div className="absolute top-[34rem] -left-28 h-80 w-80 rounded-full bg-green-300/20 blur-3xl" />
+          <div className="absolute right-1/4 bottom-10 h-64 w-64 rounded-full bg-lime-200/25 blur-3xl" />
         </div>
 
         <motion.div
@@ -629,17 +633,17 @@ export default function AddCandidatePage({
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: "easeOut" }}
-          className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-950 via-sky-950 to-blue-900 px-6 py-7 text-white shadow-xl shadow-sky-950/15 sm:px-8 sm:py-9"
+          className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-950 via-lime-950 to-green-900 px-6 py-7 text-white shadow-xl shadow-lime-950/15 sm:px-8 sm:py-9"
         >
           <div
-            className="pointer-events-none absolute -top-24 -right-12 h-72 w-72 rounded-full border border-white/10 bg-sky-400/10 blur-2xl"
+            className="pointer-events-none absolute -top-24 -right-12 h-72 w-72 rounded-full border border-white/10 bg-lime-400/10 blur-2xl"
             aria-hidden="true"
           />
           <div className="relative flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="mb-2 flex items-center gap-2 text-xs font-bold tracking-[0.16em] text-sky-200 uppercase">
+              <p className="mb-2 flex items-center gap-2 text-xs font-bold tracking-[0.16em] text-lime-200 uppercase">
                 <BriefcaseBusiness className="h-4 w-4" />
-                Talent acquisition <span className="text-sky-400">/</span> New
+                Talent acquisition <span className="text-lime-400">/</span> New
                 application
               </p>
               <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
@@ -651,7 +655,7 @@ export default function AddCandidatePage({
                     ? "Review application"
                     : "Application received"}
               </h1>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-sky-100/75">
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-lime-100/75">
                 {step === "editing"
                   ? "Add candidate details, attach their resume and required documents to start the application review."
                   : step === "review"
@@ -659,7 +663,7 @@ export default function AddCandidatePage({
                     : "The candidate details and documents were reviewed in this demo form."}
               </p>
             </div>
-            <div className="flex items-center gap-2 self-start rounded-full border border-white/15 bg-white/10 px-3 py-2 text-xs font-semibold text-sky-100 sm:self-auto">
+            <div className="flex items-center gap-2 self-start rounded-full border border-white/15 bg-white/10 px-3 py-2 text-xs font-semibold text-lime-100 sm:self-auto">
               <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/15">
                 {step === "submitted" ? (
                   <Check className="h-3.5 w-3.5" />
@@ -668,15 +672,15 @@ export default function AddCandidatePage({
                 )}
               </span>
               {step === "editing"
-                ? "Step 1 · Candidate details & documents"
+                ? "Step 1 ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Candidate details & documents"
                 : step === "review"
-                  ? "Step 2 · Review"
-                  : "Step 3 · Complete"}
+                  ? "Step 2 ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Review"
+                  : "Step 3 ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· Complete"}
             </div>
           </div>
           <div className="relative mt-7 h-1.5 overflow-hidden rounded-full bg-white/15">
             <motion.div
-              className="h-full rounded-full bg-gradient-to-r from-sky-400 to-blue-300"
+              className="h-full rounded-full bg-gradient-to-r from-lime-400 to-green-300"
               initial={false}
               animate={{
                 width:
@@ -701,7 +705,7 @@ export default function AddCandidatePage({
           }`}
         >
           {jobApplication.jobId ? (
-            <section className="rounded-2xl border border-sky-200 bg-white px-5 py-4 shadow-sm xl:col-span-2">
+            <section className="rounded-2xl border border-lime-200 bg-[#f6faef] px-5 py-4 shadow-sm xl:col-span-2">
               <h2 className="text-sm font-bold text-slate-900">
                 Applying for this position
               </h2>
@@ -722,15 +726,31 @@ export default function AddCandidatePage({
                     {jobApplication.jobId}
                   </dd>
                 </div>
+                <div>
+                  <dt className="text-xs font-semibold uppercase text-slate-500">Position</dt>
+                  <dd className="mt-1 font-medium text-slate-900">{jobApplication.position}</dd>
+                </div>
+                {jobApplication.experience ? (
+                  <div>
+                    <dt className="text-xs font-semibold uppercase text-slate-500">Required experience</dt>
+                    <dd className="mt-1 font-medium text-slate-900">{jobApplication.experience}</dd>
+                  </div>
+                ) : null}
+                {jobApplication.responsibilities ? (
+                  <div className="sm:col-span-2">
+                    <dt className="text-xs font-semibold uppercase text-slate-500">Roles &amp; responsibilities</dt>
+                    <dd className="mt-1 whitespace-pre-line leading-6 text-slate-700">{jobApplication.responsibilities}</dd>
+                  </div>
+                ) : null}
               </dl>
             </section>
           ) : null}
           <input type="hidden" name="companyName" value={jobApplication.company} />
           <input type="hidden" name="jobId" value={jobApplication.jobId} />
           <div className="space-y-6">
-            <section className="overflow-hidden rounded-3xl border border-white/80 bg-white/95 shadow-lg shadow-sky-950/5 backdrop-blur-sm">
-              <div className="flex items-start gap-3 border-b border-sky-100/80 bg-gradient-to-r from-white via-sky-50/60 to-blue-50/40 px-5 py-5 sm:px-7">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-600 text-white shadow-md shadow-sky-600/20">
+            <section className="overflow-hidden rounded-3xl border border-white/80 bg-[#f6faef] shadow-lg shadow-lime-950/5 backdrop-blur-sm">
+              <div className="flex items-start gap-3 border-b border-lime-100/80 bg-gradient-to-r from-white via-lime-50/60 to-green-50/40 px-5 py-5 sm:px-7">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-lime-600 text-white shadow-md shadow-lime-600/20">
                   <UserRound className="h-5 w-5" />
                 </span>
                 <div>
@@ -752,8 +772,8 @@ export default function AddCandidatePage({
                     }
                   >
                     <div className="mb-4 flex items-center gap-2">
-                      <span className="h-2 w-2 rounded-full bg-sky-600" />
-                      <h3 className="text-xs font-bold tracking-wider text-sky-900 uppercase">
+                      <span className="h-2 w-2 rounded-full bg-lime-600" />
+                      <h3 className="text-xs font-bold tracking-wider text-lime-900 uppercase">
                         {group.title}
                       </h3>
                     </div>
@@ -779,7 +799,7 @@ export default function AddCandidatePage({
                                 Boolean(editingRecord.details[field.name])
                               }
                               defaultValue={editingRecord?.details[field.name] ?? ""}
-                              className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-900 transition outline-none focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
+                              className="h-11 w-full rounded-xl border border-slate-200 bg-[#fbfdf6] px-3.5 text-sm text-slate-900 transition outline-none focus:border-lime-400 focus:ring-4 focus:ring-lime-100"
                             >
                               <option value="" disabled>
                                 {field.placeholder}
@@ -825,7 +845,7 @@ export default function AddCandidatePage({
                                     }
                                   : undefined
                               }
-                              className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-900 transition outline-none placeholder:text-slate-400 focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
+                              className="h-11 w-full rounded-xl border border-slate-200 bg-[#fbfdf6] px-3.5 text-sm text-slate-900 transition outline-none placeholder:text-slate-400 focus:border-lime-400 focus:ring-4 focus:ring-lime-100"
                             />
                           )}
                           {field.helperText ? (
@@ -841,9 +861,9 @@ export default function AddCandidatePage({
               </div>
             </section>
 
-            <section className="overflow-hidden rounded-3xl border border-white/80 bg-white/95 shadow-lg shadow-sky-950/5 backdrop-blur-sm">
-              <div className="flex items-start gap-3 border-b border-sky-100/80 bg-gradient-to-r from-white via-sky-50/60 to-blue-50/40 px-5 py-5 sm:px-7">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white shadow-md shadow-blue-600/20">
+            <section className="overflow-hidden rounded-3xl border border-white/80 bg-[#f6faef] shadow-lg shadow-lime-950/5 backdrop-blur-sm">
+              <div className="flex items-start gap-3 border-b border-lime-100/80 bg-gradient-to-r from-white via-lime-50/60 to-green-50/40 px-5 py-5 sm:px-7">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-green-600 text-white shadow-md shadow-green-600/20">
                   <FileText className="h-5 w-5" />
                 </span>
                 <div>
@@ -869,10 +889,10 @@ export default function AddCandidatePage({
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.35, delay: 0.06 }}
-                  className="overflow-hidden rounded-3xl border border-white/80 bg-white/95 shadow-lg shadow-sky-950/5 backdrop-blur-sm"
+                  className="overflow-hidden rounded-3xl border border-white/80 bg-[#f6faef] shadow-lg shadow-lime-950/5 backdrop-blur-sm"
                 >
-                  <div className="flex items-start gap-3 border-b border-sky-100/80 bg-gradient-to-r from-white via-sky-50/60 to-blue-50/40 px-5 py-5 sm:px-7">
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-sky-600 to-blue-600 text-white shadow-md shadow-sky-600/20">
+                  <div className="flex items-start gap-3 border-b border-lime-100/80 bg-gradient-to-r from-white via-lime-50/60 to-green-50/40 px-5 py-5 sm:px-7">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-lime-600 to-green-600 text-white shadow-md shadow-lime-600/20">
                       <Icon className="h-5 w-5" />
                     </span>
                     <div>
@@ -901,7 +921,7 @@ export default function AddCandidatePage({
               )
             })}
 
-            <div className="flex flex-col-reverse gap-3 rounded-2xl border border-white/80 bg-white/85 p-4 shadow-lg shadow-sky-950/5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+            <div className="flex flex-col-reverse gap-3 rounded-2xl border border-white/80 bg-[#f6faef] p-4 shadow-lg shadow-lime-950/5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
               <p className="text-xs text-slate-500">
                 Fields marked <span className="font-bold text-rose-500">*</span>{" "}
                 are required. Resume and documents are optional.
@@ -909,13 +929,13 @@ export default function AddCandidatePage({
               <div className="flex flex-col-reverse gap-2 sm:flex-row">
                 <Link
                   href="/candidates"
-                  className="inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                  className="inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-[#f6faef] px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
                 >
                   Cancel
                 </Link>
                 <button
                   type="submit"
-                  className="inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-xl bg-sky-600 px-5 text-sm font-semibold text-white shadow-sm shadow-sky-200 transition hover:bg-sky-700 focus-visible:ring-4 focus-visible:ring-sky-200 focus-visible:outline-none"
+                  className="inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-xl bg-lime-600 px-5 text-sm font-semibold text-slate-950 shadow-sm shadow-lime-200 transition hover:bg-lime-400 hover:text-green-950 focus-visible:ring-4 focus-visible:ring-lime-200 focus-visible:outline-none"
                 >
                   Review candidate
                   <ArrowRight className="h-4 w-4" />
@@ -925,7 +945,7 @@ export default function AddCandidatePage({
           </div>
 
           <aside className="space-y-4 xl:sticky xl:top-6">
-            <section className="rounded-3xl border border-white/80 bg-gradient-to-br from-white via-sky-50/60 to-blue-50/50 p-5 shadow-lg shadow-sky-950/5">
+            <section className="rounded-3xl border border-white/80 bg-gradient-to-br from-white via-lime-50/60 to-green-50/50 p-5 shadow-lg shadow-lime-950/5">
               <h2 className="text-sm font-bold text-slate-900">
                 Application checklist
               </h2>
@@ -942,7 +962,7 @@ export default function AddCandidatePage({
                   {
                     icon: FileText,
                     title: "Resume",
-                    description: "PDF, DOC, or DOCX · max 10 MB",
+                    description: "PDF, DOC, or DOCX ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· max 10 MB",
                   },
                   {
                     icon: ShieldCheck,
@@ -958,7 +978,7 @@ export default function AddCandidatePage({
                   const Icon = item.icon
                   return (
                     <li key={item.title} className="flex items-center gap-3">
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-sky-700 shadow-sm">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#f6faef] text-lime-700 shadow-sm">
                         <Icon className="h-4 w-4" />
                       </span>
                       <span>
@@ -975,18 +995,18 @@ export default function AddCandidatePage({
               </ul>
             </section>
 
-            <section className="rounded-3xl border border-sky-200/80 bg-gradient-to-br from-sky-100/90 via-blue-100/60 to-sky-100/70 p-5 shadow-md shadow-sky-950/5">
-              <div className="flex items-center gap-2 text-sm font-bold text-sky-950">
-                <LockKeyhole className="h-4 w-4 text-sky-700" />
+            <section className="rounded-3xl border border-lime-200/80 bg-gradient-to-br from-lime-100/90 via-green-100/60 to-lime-100/70 p-5 shadow-md shadow-lime-950/5">
+              <div className="flex items-center gap-2 text-sm font-bold text-lime-950">
+                <LockKeyhole className="h-4 w-4 text-lime-700" />
                 Handle documents safely
               </div>
-              <p className="mt-2 text-xs leading-5 text-sky-900/80">
+              <p className="mt-2 text-xs leading-5 text-lime-900/80">
                 Aadhaar, PAN, and bank documents contain sensitive personal
                 data. Files stay in this form and are not saved without secure
                 candidate storage.
               </p>
-              <div className="mt-4 flex items-start gap-2 border-t border-sky-200/70 pt-3 text-xs leading-5 text-sky-900/80">
-                <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-sky-700" />
+              <div className="mt-4 flex items-start gap-2 border-t border-lime-200/70 pt-3 text-xs leading-5 text-lime-900/80">
+                <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-lime-700" />
                 Files stay in this form and are not persisted.
               </div>
             </section>
@@ -1005,9 +1025,9 @@ export default function AddCandidatePage({
             animate={{ opacity: 1, y: 0 }}
             className="mx-auto max-w-4xl space-y-5"
           >
-            <section className="overflow-hidden rounded-3xl border border-white/80 bg-white/95 shadow-lg shadow-sky-950/5">
-              <div className="flex items-start gap-3 border-b border-sky-100/80 bg-gradient-to-r from-white via-sky-50/60 to-blue-50/40 px-5 py-5 sm:px-7">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-600 text-white">
+            <section className="overflow-hidden rounded-3xl border border-white/80 bg-[#f6faef] shadow-lg shadow-lime-950/5">
+              <div className="flex items-start gap-3 border-b border-lime-100/80 bg-gradient-to-r from-white via-lime-50/60 to-green-50/40 px-5 py-5 sm:px-7">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-lime-600 text-white">
                   <UserRound className="h-5 w-5" />
                 </span>
                 <div>
@@ -1029,8 +1049,8 @@ export default function AddCandidatePage({
                     }
                   >
                     <div className="mb-4 flex items-center gap-2">
-                      <span className="h-2 w-2 rounded-full bg-sky-600" />
-                      <h3 className="text-xs font-bold tracking-wider text-sky-900 uppercase">
+                      <span className="h-2 w-2 rounded-full bg-lime-600" />
+                      <h3 className="text-xs font-bold tracking-wider text-lime-900 uppercase">
                         {group.title}
                       </h3>
                     </div>
@@ -1044,7 +1064,7 @@ export default function AddCandidatePage({
                             {field.label}
                           </dt>
                           <dd className="mt-1.5 text-sm font-medium break-words text-slate-900">
-                            {details[field.name] || "—"}
+                            {details[field.name] || "ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â"}
                           </dd>
                         </div>
                       ))}
@@ -1054,9 +1074,9 @@ export default function AddCandidatePage({
               </div>
             </section>
 
-            <section className="overflow-hidden rounded-3xl border border-white/80 bg-white/95 p-5 shadow-lg shadow-sky-950/5 sm:p-7">
+            <section className="overflow-hidden rounded-3xl border border-white/80 bg-[#f6faef] p-5 shadow-lg shadow-lime-950/5 sm:p-7">
               <div className="flex items-center gap-3">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-100 text-sky-700">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-lime-100 text-lime-700">
                   <FileText className="h-5 w-5" />
                 </span>
                 <div>
@@ -1069,8 +1089,8 @@ export default function AddCandidatePage({
                 </div>
               </div>
               {resume ? (
-                <div className="mt-4 flex items-center gap-3 rounded-xl border border-sky-200 bg-sky-50/60 p-4">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-100 text-sky-700">
+                <div className="mt-4 flex items-center gap-3 rounded-xl border border-lime-200 bg-lime-50/60 p-4">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-lime-100 text-lime-700">
                     <FileText className="h-5 w-5" />
                   </span>
                   <span className="min-w-0">
@@ -1094,9 +1114,9 @@ export default function AddCandidatePage({
               return (
                 <section
                   key={group.title}
-                  className="overflow-hidden rounded-3xl border border-white/80 bg-white/95 shadow-lg shadow-sky-950/5"
+                  className="overflow-hidden rounded-3xl border border-white/80 bg-[#f6faef] shadow-lg shadow-lime-950/5"
                 >
-                  <div className="flex items-start gap-3 border-b border-sky-100/80 bg-gradient-to-r from-white via-sky-50/50 to-blue-50/30 px-5 py-5 sm:px-7">
+                  <div className="flex items-start gap-3 border-b border-lime-100/80 bg-gradient-to-r from-white via-lime-50/50 to-green-50/30 px-5 py-5 sm:px-7">
                     <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-700">
                       <Icon className="h-5 w-5" />
                     </span>
@@ -1120,7 +1140,7 @@ export default function AddCandidatePage({
                           <span
                             className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${
                               uploadedFile
-                                ? "bg-sky-50 text-sky-700"
+                                ? "bg-lime-50 text-lime-700"
                                 : "bg-slate-100 text-slate-400"
                             }`}
                           >
@@ -1136,7 +1156,7 @@ export default function AddCandidatePage({
                             </span>
                             {uploadedFile ? (
                               <span className="mt-0.5 block truncate text-xs text-slate-500">
-                                {uploadedFile.name} ·{" "}
+                                {uploadedFile.name} ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â·{" "}
                                 {(
                                   uploadedFile.size /
                                   (1024 * 1024)
@@ -1157,11 +1177,11 @@ export default function AddCandidatePage({
               )
             })}
 
-            <div className="flex flex-col-reverse justify-end gap-3 rounded-2xl border border-white/80 bg-white/85 p-4 shadow-lg shadow-sky-950/5 sm:flex-row sm:px-6">
+            <div className="flex flex-col-reverse justify-end gap-3 rounded-2xl border border-white/80 bg-[#f6faef] p-4 shadow-lg shadow-lime-950/5 sm:flex-row sm:px-6">
               <button
                 type="button"
                 onClick={() => setStep("editing")}
-                className="inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                className="inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-xl border border-slate-200 bg-[#f6faef] px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
               >
                 <ArrowLeft className="h-4 w-4" />
                 Back to edit
@@ -1169,7 +1189,7 @@ export default function AddCandidatePage({
               <button
                 type="button"
                 onClick={handleConfirm}
-                className="inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-xl bg-sky-600 px-5 text-sm font-semibold text-white shadow-sm shadow-sky-200 transition hover:bg-sky-700 focus-visible:ring-4 focus-visible:ring-sky-200 focus-visible:outline-none"
+                className="inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-xl bg-lime-600 px-5 text-sm font-semibold text-slate-950 shadow-sm shadow-lime-200 transition hover:bg-lime-400 hover:text-green-950 focus-visible:ring-4 focus-visible:ring-lime-200 focus-visible:outline-none"
               >
                 {recordId ? "Save candidate changes" : "Confirm candidate"}
                 <ArrowRight className="h-4 w-4" />
@@ -1184,12 +1204,12 @@ export default function AddCandidatePage({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ type: "spring", stiffness: 240, damping: 22 }}
             role="status"
-            className="mx-auto flex max-w-2xl flex-col items-center rounded-3xl border border-sky-100/80 bg-gradient-to-br from-white via-sky-50/60 to-blue-50/70 px-6 py-12 text-center shadow-xl shadow-sky-950/10 sm:px-12 sm:py-16"
+            className="mx-auto flex max-w-2xl flex-col items-center rounded-3xl border border-lime-100/80 bg-gradient-to-br from-white via-lime-50/60 to-green-50/70 px-6 py-12 text-center shadow-xl shadow-lime-950/10 sm:px-12 sm:py-16"
           >
-            <span className="flex h-20 w-20 items-center justify-center rounded-full bg-sky-50 text-sky-700 ring-8 ring-sky-50/60">
+            <span className="flex h-20 w-20 items-center justify-center rounded-full bg-lime-50 text-lime-700 ring-8 ring-lime-50/60">
               <BadgeCheck className="h-11 w-11" />
             </span>
-            <p className="mt-7 text-xs font-bold tracking-[0.16em] text-sky-700 uppercase">
+            <p className="mt-7 text-xs font-bold tracking-[0.16em] text-lime-700 uppercase">
               Review complete
             </p>
             <h2 className="mt-3 text-2xl font-bold text-slate-900">

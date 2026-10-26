@@ -89,10 +89,10 @@ export default function CompanyOnboardingForm({
   };
 
   return (
-    <div className="max-w-4xl mx-auto bg-white shadow-xl rounded-2xl border border-gray-100 overflow-hidden my-6">
-      <div className="bg-gradient-to-r from-indigo-600 via-indigo-700 to-blue-600 px-8 py-6 text-white">
+    <div className="max-w-4xl mx-auto bg-[#f6faef] shadow-sm rounded-2xl border border-[#d5e4bf] overflow-hidden my-6" style={{ backgroundImage: "linear-gradient(to right, rgba(132, 204, 22, 0.075) 1px, transparent 1px), linear-gradient(to bottom, rgba(132, 204, 22, 0.075) 1px, transparent 1px)", backgroundSize: "28px 28px" }}>
+      <div className="bg-gradient-to-r from-green-900 via-green-800 to-lime-800 px-8 py-6 text-white">
         <h2 className="text-2xl font-bold tracking-tight">Onboard New Company</h2>
-        <p className="text-indigo-100 text-sm mt-1">
+        <p className="text-lime-100 text-sm mt-1">
           Register a company. The backend will automatically generate a secure Tenant ID for shared tables.
         </p>
       </div>
@@ -107,7 +107,7 @@ export default function CompanyOnboardingForm({
         {/* Section 1: Company Profile */}
         <div>
           <h3 className="text-lg font-semibold text-gray-800 border-b pb-3 mb-5 flex items-center">
-            <span className="w-7 h-7 rounded-full bg-indigo-100 text-indigo-600 text-xs flex items-center justify-center mr-3 font-bold">1</span>
+            <span className="w-7 h-7 rounded-full bg-lime-100 text-lime-600 text-xs flex items-center justify-center mr-3 font-bold">1</span>
             Company Profile
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -119,7 +119,7 @@ export default function CompanyOnboardingForm({
                 value={formData.company_name}
                 onChange={handleCompanyNameChange}
                 placeholder="e.g. Acme Innovations"
-                className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm"
+                className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-600/20 outline-none text-sm"
               />
               <p className="text-xs text-gray-500 mt-1">The system backend will auto-generate a unique Tenant ID based on this name.</p>
             </div>
@@ -131,7 +131,7 @@ export default function CompanyOnboardingForm({
                 onChange={(e: ChangeEvent<HTMLSelectElement>) =>
                   setFormData({ ...formData, industry: e.target.value })
                 }
-                className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg outline-none text-sm bg-white"
+                className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg outline-none text-sm bg-[#fbfdf6]"
               >
                 <option value="IT & Software">IT & Software</option>
                 <option value="Manufacturing">Manufacturing</option>
@@ -147,7 +147,7 @@ export default function CompanyOnboardingForm({
                 onChange={(e: ChangeEvent<HTMLSelectElement>) =>
                   setFormData({ ...formData, employee_scale: e.target.value })
                 }
-                className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg outline-none text-sm bg-white"
+                className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg outline-none text-sm bg-[#fbfdf6]"
               >
                 <option value="1-50">1-50 Employees</option>
                 <option value="51-200">51-200 Employees</option>
@@ -160,7 +160,7 @@ export default function CompanyOnboardingForm({
         {/* Section 2: Admin Setup */}
         <div>
           <h3 className="text-lg font-semibold text-gray-800 border-b pb-3 mb-5 flex items-center">
-            <span className="w-7 h-7 rounded-full bg-indigo-100 text-indigo-600 text-xs flex items-center justify-center mr-3 font-bold">2</span>
+            <span className="w-7 h-7 rounded-full bg-lime-100 text-lime-600 text-xs flex items-center justify-center mr-3 font-bold">2</span>
             First Company Admin User
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -217,9 +217,9 @@ export default function CompanyOnboardingForm({
         </div>
 
         {/* Section 3: Architecture Info Box */}
-        <div className="bg-blue-50 border border-blue-100 p-4 rounded-xl flex items-start space-x-3">
-          <div className="text-blue-600 font-bold text-lg">💡</div>
-          <div className="text-sm text-blue-900">
+        <div className="bg-green-50 border border-green-100 p-4 rounded-xl flex items-start space-x-3">
+          <div className="text-green-600 font-bold text-lg">ÃƒÂ°Ã…Â¸Ã¢â‚¬â„¢Ã‚Â¡</div>
+          <div className="text-sm text-green-900">
             <span className="font-semibold">Backend Auto-Generation:</span> Tenant ID frontend se nahi bheji jayegi. Backend khud company name se safe slug banakar shared tables mein tag kar dega.
           </div>
         </div>
@@ -238,7 +238,7 @@ export default function CompanyOnboardingForm({
           <button
             type="submit"
             disabled={loading}
-            className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl shadow-md disabled:opacity-50 text-sm transition flex items-center"
+            className="px-6 py-2.5 bg-lime-600 hover:bg-lime-400 hover:text-green-950 text-slate-950 font-medium rounded-xl shadow-md disabled:opacity-50 text-sm transition flex items-center"
           >
             {loading ? 'Registering Company...' : 'Register Company & Save'}
           </button>

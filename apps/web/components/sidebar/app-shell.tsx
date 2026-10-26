@@ -97,9 +97,9 @@ function SidebarContentBody({
   ];
 
   return (
-    <div className="flex h-full flex-col border-r border-slate-200 bg-white">
+    <div className="flex h-full flex-col border-r border-[#ead9ae] bg-[#fff9e8]">
       <div className="border-b border-slate-200/80 px-4 py-4">
-        <div className="h-28 w-full overflow-hidden rounded-xl border border-white/80 bg-slate-50 shadow-sm ring-1 ring-slate-200/70">
+        <div className="h-28 w-full overflow-hidden rounded-xl border border-[#ead9ae] bg-[#fffdf5] shadow-sm ring-1 ring-[#ead9ae]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={sidebarLogoUrl}
@@ -125,8 +125,8 @@ function SidebarContentBody({
               className={cn(
                 "flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold transition",
                 active
-                  ? "bg-indigo-50 text-indigo-700"
-                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
+                  ? "bg-amber-100 text-amber-950"
+                  : "text-slate-600 hover:bg-lime-100 hover:text-green-950"
               )}
             >
               <Icon className="h-5 w-5" />
@@ -140,10 +140,10 @@ function SidebarContentBody({
             aria-controls="candidate-management-navigation"
             onClick={() => setCandidateManagementOpen((open) => !open)}
             className={cn(
-              "flex min-h-11 w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-semibold transition focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none",
+              "flex min-h-11 w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-semibold transition focus-visible:ring-2 focus-visible:ring-lime-600 focus-visible:outline-none",
               inCandidateManagement
-                ? "bg-indigo-50 text-indigo-700"
-                : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
+                ? "bg-amber-100 text-amber-950"
+                : "text-slate-600 hover:bg-lime-100 hover:text-green-950"
             )}
           >
             <ClipboardList className="h-5 w-5" aria-hidden="true" />
@@ -171,10 +171,10 @@ function SidebarContentBody({
                     onClick={onNavigate}
                     aria-current={active ? "page" : undefined}
                     className={cn(
-                      "flex min-h-11 items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none",
+                      "flex min-h-11 items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition focus-visible:ring-2 focus-visible:ring-lime-600 focus-visible:outline-none",
                       active
-                        ? "bg-indigo-100 text-indigo-800"
-                        : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
+                        ? "bg-amber-200 text-amber-950"
+                        : "text-slate-600 hover:bg-lime-100 hover:text-green-950"
                     )}
                   >
                     <Icon className="h-4 w-4" aria-hidden="true" />
@@ -195,8 +195,8 @@ function SidebarContentBody({
               className={cn(
                 "flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold transition",
                 active
-                  ? "bg-indigo-50 text-indigo-700"
-                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
+                  ? "bg-amber-100 text-amber-950"
+                  : "text-slate-600 hover:bg-lime-100 hover:text-green-950"
               )}
             >
               <Icon className="h-5 w-5" />
@@ -211,10 +211,10 @@ function SidebarContentBody({
             aria-controls="settings-navigation"
             onClick={() => setSettingsOpen((open) => !open)}
             className={cn(
-              "flex min-h-11 w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-semibold transition focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none",
+              "flex min-h-11 w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-semibold transition focus-visible:ring-2 focus-visible:ring-lime-600 focus-visible:outline-none",
               inSettings
-                ? "bg-indigo-50 text-indigo-700"
-                : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
+                ? "bg-amber-100 text-amber-950"
+                : "text-slate-600 hover:bg-lime-100 hover:text-green-950"
             )}
           >
             <SettingsIcon className="h-5 w-5" aria-hidden="true" />
@@ -239,10 +239,10 @@ function SidebarContentBody({
                     onClick={onNavigate}
                     aria-current={active ? "page" : undefined}
                     className={cn(
-                      "flex min-h-11 items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none",
+                      "flex min-h-11 items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition focus-visible:ring-2 focus-visible:ring-lime-600 focus-visible:outline-none",
                       active
-                        ? "bg-indigo-100 text-indigo-800"
-                        : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
+                        ? "bg-amber-200 text-amber-950"
+                        : "text-slate-600 hover:bg-lime-100 hover:text-green-950"
                     )}
                   >
                     <Icon className="h-4 w-4" aria-hidden="true" />
@@ -256,7 +256,7 @@ function SidebarContentBody({
       </nav>
 
       <div className="mt-auto border-t border-slate-200 p-4">
-        <div className="rounded-xl bg-slate-50 p-4">
+        <div className="rounded-xl bg-[#fff2d2] p-4">
           <p className="text-sm font-semibold text-slate-950">System Admin</p>
         </div>
       </div>
@@ -267,6 +267,7 @@ function SidebarContentBody({
 export function AppShell({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = React.useState(false);
   const pathname = usePathname();
+  const hasFormPageBackground = ["/addcandidate", "/addstaff", "/companymanagement", "/profile", "/candidatemanagement/open-positions", "/candidatemanagement/position-link-generator"].includes(pathname) || pathname.startsWith("/settings") || pathname.startsWith("/careers/");
 
   if (
     pathname.startsWith("/sign-in") ||
@@ -277,7 +278,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className={cn("min-h-screen", hasFormPageBackground ? "bg-sky-50" : "bg-slate-50")}>
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-72 lg:block">
         <SidebarContent />
       </aside>
