@@ -10,11 +10,33 @@ const labelClassName = 'text-sm font-semibold text-slate-800'
 
 export default function CandidateManagementPage() {
   const jobs = useJobOpenings()
+  const uniqueJobs = jobs.filter((job, index, allJobs) => {
+    const identity = `${job.company.trim().toLocaleLowerCase()}-${job.id.trim().toLocaleLowerCase()}`
+    return allJobs.findIndex((item) =>
+      `${item.company.trim().toLocaleLowerCase()}-${item.id.trim().toLocaleLowerCase()}` === identity
+    ) === index
+  })
   const [formData, setFormData] = useState({ company: '', position: '', experience: '', responsibilities: '', id: '' })
 
   const handleCreateJob = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const updatedJobs = [{ ...formData }, ...jobs]
+    const company = formData.company.trim()
+    const id = formData.id.trim()
+    const duplicate = uniqueJobs.some((job) =>
+      job.company.trim().toLocaleLowerCase() === company.toLocaleLowerCase() &&
+      job.id.trim().toLocaleLowerCase() === id.toLocaleLowerCase()
+    )
+
+    if (duplicate) {
+      toast.add({
+        title: 'Duplicate job ID',
+        description: 'This company already has a position with that job ID. Enter a unique job ID.',
+        type: 'error',
+      })
+      return
+    }
+
+    const updatedJobs = [{ ...formData, company, id }, ...uniqueJobs]
     saveJobOpenings(updatedJobs)
     toast.add({
       title: 'Job published',
@@ -48,7 +70,7 @@ export default function CandidateManagementPage() {
           </p>
         </div>
         <div className="inline-flex w-fit items-center gap-2 rounded-lg border border-slate-200 bg-[#fff4d8] px-3 py-2 text-sm font-medium text-slate-700">
-          <span className="h-2 w-2 rounded-full bg-emerald-600" aria-hidden="true" /> {jobs.length} published {jobs.length === 1 ? 'position' : 'positions'}
+          <span className="h-2 w-2 rounded-full bg-emerald-600" aria-hidden="true" /> {uniqueJobs.length} published {uniqueJobs.length === 1 ? 'position' : 'positions'}
         </div>
       </header>
 
@@ -124,7 +146,7 @@ export default function CandidateManagementPage() {
             <p className="mt-1 text-sm text-slate-600">Manage live roles and copy their candidate application links.</p>
           </div>
         </div>
-        {jobs.length === 0 ? (
+        {uniqueJobs.length === 0 ? (
           <div className="rounded-xl border border-dashed border-slate-300 bg-[#fffdf5] px-6 py-12 text-center">
             <BriefcaseBusiness aria-hidden="true" className="mx-auto h-8 w-8 text-slate-400" />
             <h3 className="mt-3 text-sm font-semibold text-slate-900">No positions published yet</h3>
@@ -132,8 +154,8 @@ export default function CandidateManagementPage() {
           </div>
         ) : (
           <div className="grid gap-4 md:grid-cols-2">
-            {jobs.map((job) => (
-              <article key={`${job.company}-${job.id}`} className="flex flex-col justify-between rounded-xl border border-[#ead9ae] bg-[#fffdf5] p-5 transition-colors hover:border-slate-300">
+            {uniqueJobs.map((job) => (
+              <article key={`${job.company.trim().toLocaleLowerCase()}-${job.id.trim().toLocaleLowerCase()}`} className="flex flex-col justify-between rounded-xl border border-[#ead9ae] bg-[#fffdf5] p-5 transition-colors hover:border-slate-300">
                 <div>
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <span className="inline-flex items-center gap-1.5 rounded-md bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-800"><Check aria-hidden="true" className="h-3.5 w-3.5" /> Published</span>

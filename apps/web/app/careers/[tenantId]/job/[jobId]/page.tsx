@@ -2,7 +2,12 @@ import PublicJobApplyPage from "@/components/candidatemanagement/careers/[tenant
 
 type CareerApplicationPageProps = {
   params: Promise<{ tenantId: string; jobId: string }>
-  searchParams: Promise<{ position?: string | string[]; experience?: string | string[]; responsibilities?: string | string[] }>
+  searchParams: Promise<{
+    position?: string | string[]
+    experience?: string | string[]
+    responsibilities?: string | string[]
+    apply?: string | string[]
+  }>
 }
 
 export default function CareerApplicationPage(props: CareerApplicationPageProps) {

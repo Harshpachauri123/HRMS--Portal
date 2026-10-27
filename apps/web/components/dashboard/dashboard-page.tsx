@@ -108,14 +108,14 @@ export default function DashboardPage() {
 
   return (
     <MotionConfig reducedMotion="user">
-      <main className="relative isolate min-h-[calc(100vh-9rem)] space-y-6 overflow-hidden rounded-[30px] bg-gradient-to-br from-slate-100 via-indigo-50/80 to-cyan-50/80 p-4 sm:space-y-8 sm:p-6 lg:p-7">
+      <main className="relative isolate min-h-[calc(100vh-9rem)] space-y-6 overflow-hidden rounded-[30px] bg-[#fce9df] p-4 sm:space-y-8 sm:p-6 lg:p-7">
         <div
           className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
           aria-hidden="true"
         >
-          <div className="absolute -top-28 -right-28 h-96 w-96 rounded-full bg-indigo-300/25 blur-3xl" />
-          <div className="absolute top-[40rem] -left-32 h-80 w-80 rounded-full bg-cyan-300/25 blur-3xl" />
-          <div className="absolute right-1/4 bottom-0 h-72 w-72 rounded-full bg-violet-300/20 blur-3xl" />
+          <div className="absolute -top-28 -right-28 h-96 w-96 rounded-full bg-[#eb5b25]/10 blur-3xl" />
+          <div className="absolute top-[40rem] -left-32 h-80 w-80 rounded-full bg-[#f4a77e]/20 blur-3xl" />
+          <div className="absolute right-1/4 bottom-0 h-72 w-72 rounded-full bg-[#f8d8c7]/30 blur-3xl" />
         </div>
         <motion.header
           initial={{ opacity: 0, y: 16 }}

@@ -1,9 +1,9 @@
-import CopyLinkPage from "@/components/candidatemanagement/position-link-generator/page"
+import CopyLinkPage from "@/components/candidatemanagement/applyform/page"
 
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Position Link Generator - HRMS Portal",
+  title: "Apply Form - HRMS Portal",
   description:
     "Generate shareable application links for open positions to share with candidates.",
 }

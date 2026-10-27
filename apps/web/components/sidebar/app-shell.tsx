@@ -83,7 +83,7 @@ function SidebarContentBody({
       icon: BriefcaseBusiness,
     },
     {
-      href: "/candidatemanagement/position-link-generator",
+      href: "/candidatemanagement/applyform",
       label: "Apply Form",
       icon: Link2,
     },
@@ -270,9 +270,18 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const hasFormPageBackground = ["/addcandidate", "/addstaff", "/companymanagement", "/profile", "/candidatemanagement/open-positions", "/candidatemanagement/position-link-generator"].includes(pathname) || pathname.startsWith("/settings") || pathname.startsWith("/careers/");
 
   if (
+    pathname.startsWith("/employee") ||
     pathname.startsWith("/sign-in") ||
     pathname.startsWith("/sign-up") ||
     pathname === "/forgot-password"
+  ) {
+    return <>{children}</>;
+  }
+
+  // Public career pages are shared with applicants and must not expose the admin shell.
+  if (
+    pathname.startsWith("/careers/") ||
+    pathname === "/candidatemanagement/applyform"
   ) {
     return <>{children}</>;
   }

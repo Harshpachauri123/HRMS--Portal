@@ -19,34 +19,44 @@ import { toast } from "@workspace/ui/components/toast"
 import { useJobOpenings, type JobOpening } from "@/lib/job-openings"
 
 function getJobKey(job: JobOpening) {
-  return job.company + ":" + job.id
+  return job.company.trim().toLocaleLowerCase() + ":" + job.id.trim().toLocaleLowerCase()
 }
 
 function getCandidateHref(job: JobOpening) {
   const params = new URLSearchParams({
-    company: job.company,
-    jobId: job.id,
     position: job.position,
     experience: job.experience,
     responsibilities: job.responsibilities,
+    apply: "1",
   })
-  return "/addcandidate?" + params.toString()
+  return (
+    "/careers/" +
+    encodeURIComponent(job.company) +
+    "/job/" +
+    encodeURIComponent(job.id) +
+    "?" +
+    params.toString()
+  )
 }
 
 export default function PositionLinkGeneratorPage() {
   const jobs = useJobOpenings()
+  const uniqueJobs = jobs.filter(
+    (job, index, allJobs) =>
+      allJobs.findIndex((candidate) => getJobKey(candidate) === getJobKey(job)) === index,
+  )
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedJobKey, setSelectedJobKey] = useState<string | null>(null)
   const selectedDetailsRef = useRef<HTMLElement | null>(null)
   const normalizedQuery = searchQuery.trim().toLocaleLowerCase()
-  const filteredJobs = jobs.filter((job) =>
+  const filteredJobs = uniqueJobs.filter((job) =>
     [job.position, job.company, job.id, job.experience, job.responsibilities]
       .join(" ")
       .toLocaleLowerCase()
       .includes(normalizedQuery),
   )
-  const companyCount = new Set(jobs.map((job) => job.company)).size
-  const selectedJob = jobs.find((job) => getJobKey(job) === selectedJobKey)
+  const companyCount = new Set(uniqueJobs.map((job) => job.company.trim().toLocaleLowerCase())).size
+  const selectedJob = uniqueJobs.find((job) => getJobKey(job) === selectedJobKey)
 
   useEffect(() => {
     if (!selectedJob) return
@@ -124,7 +134,7 @@ export default function PositionLinkGeneratorPage() {
             <BriefcaseBusiness aria-hidden="true" className="h-5 w-5" />
           </span>
           <div>
-            <p className="text-2xl font-bold leading-none text-slate-950">{jobs.length}</p>
+            <p className="text-2xl font-bold leading-none text-slate-950">{uniqueJobs.length}</p>
             <p className="mt-1.5 text-sm text-slate-600">Published positions</p>
           </div>
         </div>
@@ -176,18 +186,18 @@ export default function PositionLinkGeneratorPage() {
         </div>
 
         <p className="text-xs font-medium text-slate-600" aria-live="polite">
-          Showing {filteredJobs.length} of {jobs.length}{" "}
-          {jobs.length === 1 ? "position" : "positions"}
+          Showing {filteredJobs.length} of {uniqueJobs.length}{" "}
+          {uniqueJobs.length === 1 ? "position" : "positions"}
         </p>
 
         {filteredJobs.length > 0 ? (
           <div className="grid gap-4 md:grid-cols-2">
-            {filteredJobs.map((job) => {
+            {filteredJobs.map((job, index) => {
               const isSelected = getJobKey(job) === selectedJobKey
 
               return (
                 <article
-                  key={getJobKey(job)}
+                  key={`${getJobKey(job)}-${index}`}
                   className="flex min-w-0 flex-col justify-between rounded-xl border border-[#ead9ae] bg-[#fffdf5] p-5 transition duration-200 hover:border-lime-300 hover:shadow-md hover:shadow-lime-950/5"
                 >
                   <div>
