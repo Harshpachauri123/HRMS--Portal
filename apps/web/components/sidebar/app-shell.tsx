@@ -43,7 +43,7 @@ const MainBottom = [
   },
 ]
 
-const sidebarLogoUrl = "/Hr Pulse.png"
+const sidebarLogoUrl = "/teamora.png"
 
 function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname()
@@ -100,11 +100,11 @@ function SidebarContentBody({
   return (
     <div className="flex h-full flex-col border-r border-[#ead9ae] bg-[#fff9e8]">
       <div className="border-b border-slate-200/80 px-4 py-4">
-        <div className="h-28 w-full overflow-hidden rounded-xl border border-[#ead9ae] bg-[#fffdf5] shadow-sm ring-1 ring-[#ead9ae]">
+        <div className="aspect-video w-full overflow-hidden rounded-xl border border-[#ead9ae] bg-[#fffdf5] shadow-sm ring-1 ring-[#ead9ae]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={sidebarLogoUrl}
-            alt="HR Pulse - Connecting People, Powering Progress"
+            alt="Teamora - People First. Progress Together."
             className="h-full w-full object-contain"
           />
         </div>
@@ -282,6 +282,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     ].includes(pathname) ||
     pathname.startsWith("/settings") ||
     pathname.startsWith("/careers/")
+  const appBackground = pathname.startsWith("/settings")
+    ? "bg-[#fce9df]"
+    : hasFormPageBackground
+      ? "bg-sky-50"
+      : "bg-slate-50"
 
   if (
     pathname.startsWith("/employee") ||
@@ -301,12 +306,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div
-      className={cn(
-        "min-h-screen",
-        hasFormPageBackground ? "bg-sky-50" : "bg-slate-50"
-      )}
-    >
+    <div className={cn("min-h-screen", appBackground)}>
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-72 lg:block">
         <SidebarContent />
       </aside>

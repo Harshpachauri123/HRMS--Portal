@@ -1,6 +1,6 @@
-"use client";
+"use client"
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react"
 import {
   ArrowDownToLine,
   CalendarDays,
@@ -11,157 +11,160 @@ import {
   LogIn,
   LogOut,
   ShieldCheck,
-} from "lucide-react";
-import { toast } from "@workspace/ui/components/toast";
+} from "lucide-react"
+import { toast } from "@workspace/ui/components/toast"
 
 interface AttendanceRecord {
-  date: string;
-  checkIn: string;
-  checkOut: string | null;
+  date: string
+  checkIn: string
+  checkOut: string | null
 }
 
-const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 
 function getDateKey(date: Date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, "0")
+  const day = String(date.getDate()).padStart(2, "0")
 
-  return `${year}-${month}-${day}`;
+  return `${year}-${month}-${day}`
 }
 
 function formatTime(value: string | null) {
-  if (!value) return "--:--";
+  if (!value) return "--:--"
 
   return new Intl.DateTimeFormat("en-IN", {
     hour: "2-digit",
     minute: "2-digit",
     hour12: true,
-  }).format(new Date(value));
+  }).format(new Date(value))
 }
 
 function formatDuration(minutes: number) {
-  const hours = Math.floor(minutes / 60);
-  const remainingMinutes = minutes % 60;
+  const hours = Math.floor(minutes / 60)
+  const remainingMinutes = minutes % 60
 
-  return `${hours}h ${String(remainingMinutes).padStart(2, "0")}m`;
+  return `${hours}h ${String(remainingMinutes).padStart(2, "0")}m`
 }
 
 function getDurationMinutes(record: AttendanceRecord, now: Date) {
-  const endTime = record.checkOut ? new Date(record.checkOut) : now;
+  const endTime = record.checkOut ? new Date(record.checkOut) : now
   const elapsed = Math.floor(
-    (endTime.getTime() - new Date(record.checkIn).getTime()) / 60_000,
-  );
+    (endTime.getTime() - new Date(record.checkIn).getTime()) / 60_000
+  )
 
-  return Math.max(0, elapsed);
+  return Math.max(0, elapsed)
 }
 
 function getCalendarDays(month: Date) {
-  const year = month.getFullYear();
-  const monthIndex = month.getMonth();
-  const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
-  const leadingDays = (new Date(year, monthIndex, 1).getDay() + 6) % 7;
-  const cellCount = Math.ceil((leadingDays + daysInMonth) / 7) * 7;
+  const year = month.getFullYear()
+  const monthIndex = month.getMonth()
+  const daysInMonth = new Date(year, monthIndex + 1, 0).getDate()
+  const leadingDays = (new Date(year, monthIndex, 1).getDay() + 6) % 7
+  const cellCount = Math.ceil((leadingDays + daysInMonth) / 7) * 7
 
   return Array.from({ length: cellCount }, (_, index) => {
-    const day = index - leadingDays + 1;
-    return day > 0 && day <= daysInMonth ? new Date(year, monthIndex, day) : null;
-  });
+    const day = index - leadingDays + 1
+    return day > 0 && day <= daysInMonth
+      ? new Date(year, monthIndex, day)
+      : null
+  })
 }
 
 export default function AttendancePage() {
-  const [now, setNow] = useState<Date | null>(null);
-  const [month, setMonth] = useState<Date | null>(null);
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
-  const [records, setRecords] = useState<AttendanceRecord[]>([]);
+  const [now, setNow] = useState<Date | null>(null)
+  const [month, setMonth] = useState<Date | null>(null)
+  const [selectedDate, setSelectedDate] = useState<string | null>(null)
+  const [records, setRecords] = useState<AttendanceRecord[]>([])
 
   useEffect(() => {
-    const initialNow = new Date();
-    setNow(initialNow);
-    setMonth(new Date(initialNow.getFullYear(), initialNow.getMonth(), 1));
-    setSelectedDate(getDateKey(initialNow));
+    const initialNow = new Date()
+    setNow(initialNow)
+    setMonth(new Date(initialNow.getFullYear(), initialNow.getMonth(), 1))
+    setSelectedDate(getDateKey(initialNow))
 
-    const timer = window.setInterval(() => setNow(new Date()), 30_000);
-    return () => window.clearInterval(timer);
-  }, []);
+    const timer = window.setInterval(() => setNow(new Date()), 30_000)
+    return () => window.clearInterval(timer)
+  }, [])
 
-  const todayKey = now ? getDateKey(now) : null;
-  const activeRecord = records.find((record) => record.checkOut === null) ?? null;
-  const todayRecord = records.find((record) => record.date === todayKey) ?? null;
+  const todayKey = now ? getDateKey(now) : null
+  const activeRecord =
+    records.find((record) => record.checkOut === null) ?? null
+  const todayRecord = records.find((record) => record.date === todayKey) ?? null
   const calendarDays = useMemo(
     () => (month ? getCalendarDays(month) : []),
-    [month],
-  );
+    [month]
+  )
   const monthRecords = records.filter(
     (record) =>
       month &&
       record.date.startsWith(
-        `${month.getFullYear()}-${String(month.getMonth() + 1).padStart(2, "0")}`,
-      ),
-  );
-  const completedRecords = monthRecords.filter((record) => record.checkOut);
+        `${month.getFullYear()}-${String(month.getMonth() + 1).padStart(2, "0")}`
+      )
+  )
+  const completedRecords = monthRecords.filter((record) => record.checkOut)
   const monthMinutes =
     now &&
     monthRecords.reduce(
       (total, record) => total + getDurationMinutes(record, now),
-      0,
-    );
+      0
+    )
   const completedMinutes =
     now &&
     completedRecords.reduce(
       (total, record) => total + getDurationMinutes(record, now),
-      0,
-    );
+      0
+    )
   const averageMinutes =
     completedRecords.length > 0 && typeof completedMinutes === "number"
       ? Math.round(completedMinutes / completedRecords.length)
-      : 0;
+      : 0
   const canMoveToNextMonth =
     month &&
     now &&
     (month.getFullYear() < now.getFullYear() ||
       (month.getFullYear() === now.getFullYear() &&
-        month.getMonth() < now.getMonth()));
+        month.getMonth() < now.getMonth()))
   function handlePunchIn() {
-    if (!now || !todayKey || activeRecord || todayRecord) return;
+    if (!now || !todayKey || activeRecord || todayRecord) return
 
     setRecords([
       ...records,
       { date: todayKey, checkIn: now.toISOString(), checkOut: null },
-    ]);
-    setSelectedDate(todayKey);
-    setMonth(new Date(now.getFullYear(), now.getMonth(), 1));
+    ])
+    setSelectedDate(todayKey)
+    setMonth(new Date(now.getFullYear(), now.getMonth(), 1))
     toast.add({
       title: "Attendance started",
       description: "Your check-in time has been recorded.",
       type: "success",
-    });
+    })
   }
 
   function handlePunchOut() {
-    if (!now || !activeRecord) return;
+    if (!now || !activeRecord) return
 
     setRecords(
       records.map((record) =>
         record === activeRecord
           ? { ...record, checkOut: now.toISOString() }
-          : record,
-      ),
-    );
+          : record
+      )
+    )
     toast.add({
       title: "Attendance ended",
       description: "Your check-out time has been recorded.",
       type: "success",
-    });
+    })
   }
 
   function moveMonth(amount: number) {
-    if (!month) return;
-    setMonth(new Date(month.getFullYear(), month.getMonth() + amount, 1));
+    if (!month) return
+    setMonth(new Date(month.getFullYear(), month.getMonth() + amount, 1))
   }
 
   function exportMonth() {
-    if (!month || monthRecords.length === 0) return;
+    if (!month || monthRecords.length === 0) return
 
     const rows = [
       ["Date", "Punch in", "Punch out", "Hours", "Status"],
@@ -172,29 +175,29 @@ export default function AttendancePage() {
         formatDuration(now ? getDurationMinutes(record, now) : 0),
         record.checkOut ? "Complete" : "In progress",
       ]),
-    ];
+    ]
     const csv = rows
       .map((row) =>
-        row.map((value) => `"${value.replaceAll('"', '""')}"`).join(","),
+        row.map((value) => `"${value.replaceAll('"', '""')}"`).join(",")
       )
-      .join("\n");
+      .join("\n")
     const url = URL.createObjectURL(
-      new Blob([csv], { type: "text/csv;charset=utf-8" }),
-    );
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `attendance-${getDateKey(month).slice(0, 7)}.csv`;
-    link.click();
-    URL.revokeObjectURL(url);
+      new Blob([csv], { type: "text/csv;charset=utf-8" })
+    )
+    const link = document.createElement("a")
+    link.href = url
+    link.download = `attendance-${getDateKey(month).slice(0, 7)}.csv`
+    link.click()
+    URL.revokeObjectURL(url)
     toast.add({
       title: "Attendance exported",
       description: `Attendance data for ${getDateKey(month).slice(0, 7)} was downloaded.`,
       type: "success",
-    });
+    })
   }
 
   return (
-    <div className="space-y-6">
+    <div className="min-h-[calc(100vh-12rem)] space-y-6 rounded-[30px] bg-[#fce9df] p-4 pb-10 sm:p-6 lg:p-7">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="text-sm font-semibold text-indigo-600">
@@ -254,7 +257,8 @@ export default function AttendancePage() {
               {activeRecord && now && (
                 <span className="inline-flex items-center gap-2">
                   <Check className="h-4 w-4 text-emerald-300" />
-                  {formatDuration(getDurationMinutes(activeRecord, now))} tracked
+                  {formatDuration(getDurationMinutes(activeRecord, now))}{" "}
+                  tracked
                 </span>
               )}
             </div>
@@ -262,7 +266,7 @@ export default function AttendancePage() {
 
           <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center lg:flex-col lg:items-end">
             <div className="min-w-36 text-left sm:text-right lg:text-right">
-              <p className="text-4xl font-semibold tabular-nums tracking-tight sm:text-5xl">
+              <p className="text-4xl font-semibold tracking-tight tabular-nums sm:text-5xl">
                 {now ? formatTime(now.toISOString()) : "--:--"}
               </p>
               <p className="mt-1 text-xs text-indigo-200">Your local time</p>
@@ -271,7 +275,7 @@ export default function AttendancePage() {
               <button
                 type="button"
                 onClick={handlePunchOut}
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-rose-500 px-5 text-sm font-bold text-white shadow-lg shadow-rose-950/25 transition hover:bg-rose-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-900"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-rose-500 px-5 text-sm font-bold text-white shadow-lg shadow-rose-950/25 transition hover:bg-rose-400 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-900 focus-visible:outline-none"
               >
                 <LogOut className="h-4 w-4" />
                 Punch out
@@ -281,7 +285,7 @@ export default function AttendancePage() {
                 type="button"
                 onClick={handlePunchIn}
                 disabled={!now || Boolean(todayRecord)}
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-white px-5 text-sm font-bold text-indigo-950 shadow-lg shadow-indigo-950/20 transition hover:bg-indigo-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-900 disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-white px-5 text-sm font-bold text-indigo-950 shadow-lg shadow-indigo-950/20 transition hover:bg-indigo-50 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-900 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <LogIn className="h-4 w-4" />
                 {todayRecord ? "Day completed" : "Punch in"}
@@ -291,7 +295,10 @@ export default function AttendancePage() {
         </div>
       </section>
 
-      <section aria-label="Monthly attendance summary" className="grid gap-4 sm:grid-cols-3">
+      <section
+        aria-label="Monthly attendance summary"
+        className="grid gap-4 sm:grid-cols-3"
+      >
         {[
           {
             label: "Days attended",
@@ -302,7 +309,9 @@ export default function AttendancePage() {
           },
           {
             label: "Hours tracked",
-            value: formatDuration(typeof monthMinutes === "number" ? monthMinutes : 0),
+            value: formatDuration(
+              typeof monthMinutes === "number" ? monthMinutes : 0
+            ),
             note: "Including today",
             icon: Clock3,
             color: "text-emerald-600 bg-emerald-50",
@@ -322,7 +331,7 @@ export default function AttendancePage() {
             <div className="flex items-start justify-between">
               <div>
                 <p className="text-sm font-medium text-slate-500">{label}</p>
-                <p className="mt-2 text-2xl font-bold tabular-nums text-slate-950">
+                <p className="mt-2 text-2xl font-bold text-slate-950 tabular-nums">
                   {value}
                 </p>
               </div>
@@ -400,14 +409,15 @@ export default function AttendancePage() {
               </span>
             ))}
             {calendarDays.map((date, index) => {
-              if (!date) return <span aria-hidden="true" key={`empty-${index}`} />;
+              if (!date)
+                return <span aria-hidden="true" key={`empty-${index}`} />
 
-              const dateKey = getDateKey(date);
-              const record = records.find((item) => item.date === dateKey);
-              const isSelected = dateKey === selectedDate;
-              const isToday = dateKey === todayKey;
-              const isFuture = Boolean(todayKey && dateKey > todayKey);
-              const isWeeklyOff = date.getDay() === 0;
+              const dateKey = getDateKey(date)
+              const record = records.find((item) => item.date === dateKey)
+              const isSelected = dateKey === selectedDate
+              const isToday = dateKey === todayKey
+              const isFuture = Boolean(todayKey && dateKey > todayKey)
+              const isWeeklyOff = date.getDay() === 0
 
               return (
                 <button
@@ -428,8 +438,8 @@ export default function AttendancePage() {
                         : "bg-indigo-600 text-white shadow-md shadow-indigo-600/20"
                       : isToday
                         ? isWeeklyOff
-                          ? "bg-rose-50 text-rose-700 ring-1 ring-inset ring-indigo-200"
-                          : "bg-indigo-50 text-indigo-700 ring-1 ring-inset ring-indigo-200"
+                          ? "bg-rose-50 text-rose-700 ring-1 ring-indigo-200 ring-inset"
+                          : "bg-indigo-50 text-indigo-700 ring-1 ring-indigo-200 ring-inset"
                         : isWeeklyOff
                           ? "bg-rose-50/70 text-rose-600 hover:bg-rose-100"
                           : "text-slate-700 hover:bg-slate-100"
@@ -448,7 +458,7 @@ export default function AttendancePage() {
                     />
                   )}
                 </button>
-              );
+              )
             })}
           </div>
 
@@ -500,7 +510,7 @@ export default function AttendancePage() {
                       <th
                         key={heading}
                         scope="col"
-                        className="px-5 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500"
+                        className="px-5 py-3 text-xs font-semibold tracking-wide text-slate-500 uppercase"
                       >
                         {heading}
                       </th>
@@ -522,10 +532,10 @@ export default function AttendancePage() {
                           year: "numeric",
                         }).format(new Date(`${record.date}T00:00:00`))}
                       </td>
-                      <td className="px-5 py-4 text-sm font-semibold tabular-nums text-slate-800">
+                      <td className="px-5 py-4 text-sm font-semibold text-slate-800 tabular-nums">
                         {formatTime(record.checkIn)}
                       </td>
-                      <td className="px-5 py-4 text-sm font-semibold tabular-nums text-slate-800">
+                      <td className="px-5 py-4 text-sm font-semibold text-slate-800 tabular-nums">
                         {formatTime(record.checkOut)}
                       </td>
                     </tr>
@@ -541,5 +551,5 @@ export default function AttendancePage() {
         </section>
       </section>
     </div>
-  );
+  )
 }

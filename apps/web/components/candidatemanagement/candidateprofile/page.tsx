@@ -471,7 +471,7 @@ export default function CandidateProfile() {
 
   if (pdfPreview) {
     return (
-      <main className="min-h-screen bg-slate-100 p-3 sm:p-6">
+      <main className="min-h-screen bg-[#fce9df] p-3 sm:p-6">
         <div className="mx-auto flex min-h-[calc(100vh-1.5rem)] max-w-7xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm sm:min-h-[calc(100vh-3rem)]">
           <header className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 sm:px-6">
             <div className="flex min-w-0 items-center gap-3">
@@ -508,13 +508,13 @@ export default function CandidateProfile() {
   return (
     <MotionConfig reducedMotion="user">
       <>
-      <main className="relative isolate min-h-[calc(100vh-9rem)] space-y-6 overflow-hidden rounded-[30px] bg-gradient-to-br from-slate-50 via-emerald-50/70 to-cyan-50/80 p-4 pb-10 sm:p-6 lg:p-7">
+      <main className="relative isolate min-h-[calc(100vh-9rem)] space-y-6 overflow-hidden rounded-[30px] bg-[#fce9df] p-4 pb-10 sm:p-6 lg:p-7">
         <div
           className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
           aria-hidden="true"
         >
-          <div className="absolute -top-32 -right-24 h-96 w-96 rounded-full bg-emerald-300/20 blur-3xl" />
-          <div className="absolute top-[34rem] -left-32 h-80 w-80 rounded-full bg-cyan-300/20 blur-3xl" />
+          <div className="absolute -top-32 -right-24 h-96 w-96 rounded-full bg-[#eb5b25]/10 blur-3xl" />
+          <div className="absolute top-[34rem] -left-32 h-80 w-80 rounded-full bg-[#f4a77e]/20 blur-3xl" />
         </div>
 
         <motion.header

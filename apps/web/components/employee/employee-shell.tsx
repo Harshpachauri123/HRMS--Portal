@@ -19,12 +19,12 @@ function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
         <Link
           href="/employee/dashboard"
           onClick={onNavigate}
-          className="block h-28 w-full overflow-hidden rounded-xl border border-[#f0c8b1] bg-[#fff1e7] shadow-sm ring-1 ring-[#f0c8b1] transition hover:border-[#e9a886] hover:shadow-md focus-visible:ring-2 focus-visible:ring-[#eb5b25] focus-visible:outline-none"
+          className="block aspect-video w-full overflow-hidden rounded-xl border border-[#f0c8b1] bg-[#fff1e7] shadow-sm ring-1 ring-[#f0c8b1] transition hover:border-[#e9a886] hover:shadow-md focus-visible:ring-2 focus-visible:ring-[#eb5b25] focus-visible:outline-none"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/Hr Pulse.png"
-            alt="HR Pulse - Connecting People, Powering Progress"
+            src="/teamora.png"
+            alt="Teamora - People First. Progress Together."
             className="h-full w-full object-contain"
           />
         </Link>

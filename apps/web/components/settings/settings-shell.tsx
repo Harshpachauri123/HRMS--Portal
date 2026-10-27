@@ -15,7 +15,7 @@ export function SettingsShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
 
   return (
-    <div className="space-y-6">
+    <div className="min-h-[calc(100vh-12rem)] space-y-6 rounded-[30px] bg-[#fce9df] p-4 sm:p-6 lg:p-7">
       <div>
         <p className="text-xs font-semibold tracking-wider text-indigo-700">
           ACCESS &amp; ADMINISTRATION

@@ -253,10 +253,21 @@ export default function EmployeeProfilePage() {
   const workEmail = getProfileValue("Contact details", "Work email")
   const phoneNumber = getProfileValue("Contact details", "Phone number")
   const employeeId = getProfileValue("Organization", "Employee ID")
+  const employeeName = getProfileValue("Primary details", "Full name")
+  const jobTitle = getProfileValue("Organization", "Job title")
+  const department = getProfileValue("Organization", "Department")
   const currentAddress = getProfileValue(
     "Address & education",
     "Current address"
   )
+  const employeeInitials =
+    employeeName
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part[0])
+      .join("")
+      .toUpperCase() || "E"
 
   function saveProfileSection(title: string, fields: ProfileField[]) {
     setSections((current) =>
@@ -324,21 +335,21 @@ export default function EmployeeProfilePage() {
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={photoUrl}
-                    alt="Aarav Mehta profile photo"
+                    alt={`${employeeName} profile photo`}
                     className="block max-h-32 max-w-28 rounded-xl object-contain"
                   />
                 </div>
               ) : (
                 <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl border-4 border-[#fff4ec] bg-[#eb5b25] text-2xl font-bold text-white shadow-md sm:h-24 sm:w-24">
-                  AM
+                  {employeeInitials}
                 </div>
               )}
               <div className="min-w-0 pb-1">
                 <h2 className="truncate text-xl font-bold text-slate-950 sm:text-2xl">
-                  Aarav Mehta
+                  {employeeName}
                 </h2>
                 <p className="mt-1 text-sm text-slate-600">
-                  Senior Frontend Engineer · Product &amp; Engineering
+                  {jobTitle} · {department}
                 </p>
               </div>
             </div>
