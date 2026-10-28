@@ -37,7 +37,7 @@ export function NavigationHeader({
 
   return (
     <header className="sticky top-0 z-20 flex min-h-18 items-center justify-between border-b border-[#ead9ae] bg-[#fff9e8] px-4 py-3 sm:px-6 lg:px-7">
-      <div className="flex min-w-0 items-center gap-3">
+      <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
         <Button
           aria-label="Open navigation"
           variant="ghost"
@@ -48,12 +48,22 @@ export function NavigationHeader({
           <Menu className="h-5 w-5" />
         </Button>
 
+        {/* Mobile only logo: Hidden on desktop (lg:hidden) */}
+        <div className="flex shrink-0 items-center overflow-hidden rounded-lg border border-[#ead9ae]/80 bg-[#fffdf5] p-0.5 shadow-xs lg:hidden">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/mobileteamora.png"
+            alt="Teamora Logo"
+            className="h-8 w-auto object-contain sm:h-9"
+          />
+        </div>
+
         <div className="min-w-0">
-          <h1 className="truncate text-base font-bold leading-tight text-emerald-600 sm:text-2xl">
-            HR Pulse - Connecting People, Powering Progress
+          <h1 className="truncate text-sm font-bold leading-tight text-emerald-600 sm:text-2xl">
+            Teamora , People First, Progress Together.
           </h1>
           <p>
-            <span className="truncate text-sm font-medium text-slate-500">
+            <span className="truncate text-xs font-medium text-slate-500 sm:text-sm">
               Staff Management - HRMS Portal
             </span>
           </p>
