@@ -1,5 +1,5 @@
+import AttendancePage from "@/components/Hr/attendance/page";
 import type { Metadata } from "next";
-import AttendancePage from "@/components/attendance/page";
 
 export const metadata: Metadata = {
   title: "Attendance - HRMS Portal",

@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import AddStaffPage from "@/components/addstaff/page"
+import AddStaffPage from "@/components/Hr/addstaff/page"
 
 export const metadata: Metadata = {
   title: "Add Staff - HRMS Portal",

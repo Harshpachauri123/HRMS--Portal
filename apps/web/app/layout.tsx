@@ -1,6 +1,6 @@
-import type { Metadata } from "next";
-import { AppShell } from "@/components/sidebar/app-shell";
+import { AppShell } from "@/components/Hr/sidebar/app-shell";
 import { Toaster } from "@workspace/ui/components/toast";
+import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {

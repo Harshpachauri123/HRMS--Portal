@@ -1,6 +1,6 @@
 "use client"
 
-import { useEmployeePhoto } from "@/components/employee/employee-photo-provider"
+import { useEmployeePhoto } from "@/components/Employees/sidebar/employee-photo-provider"
 import { cn } from "@/lib/utils"
 
 export function EmployeeAvatar({

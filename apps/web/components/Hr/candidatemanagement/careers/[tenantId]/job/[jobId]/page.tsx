@@ -1,6 +1,6 @@
-import AddCandidatePage from "@/components/candidatemanagement/addcandidate/page"
-import Link from "next/link"
+import AddCandidatePage from "@/components/Hr/candidatemanagement/addcandidate/page"
 import { ArrowRight, BriefcaseBusiness } from "lucide-react"
+import Link from "next/link"
 
 type CareerApplicationPageProps = {
   params: Promise<{ tenantId: string; jobId: string }>

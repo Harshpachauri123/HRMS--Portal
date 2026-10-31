@@ -1,5 +1,5 @@
-import { EmployeeShell } from "@/components/employee/employee-shell"
-import { EmployeePhotoProvider } from "@/components/employee/employee-photo-provider"
+import { EmployeePhotoProvider } from "@/components/Employees/sidebar/employee-photo-provider"
+import { EmployeeShell } from "@/components/Employees/sidebar/employee-shell"
 
 export default function EmployeeLayout({
   children,

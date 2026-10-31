@@ -1,4 +1,4 @@
-import CandidatesPage from "@/components/candidatemanagement/candidates/page"
+import CandidatesPage from "@/components/Hr/candidatemanagement/candidates/page"
 
 import { Metadata } from "next"
 

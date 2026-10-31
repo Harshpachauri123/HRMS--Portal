@@ -1,26 +1,26 @@
 "use client"
 
-import * as React from "react"
+import { NavigationHeader } from "@/components/Hr/sidebar/navigation-header"
+import { cn } from "@/lib/utils"
+import { Button } from "@workspace/ui/components/button"
+import {
+    BriefcaseBusiness,
+    CalendarCheck,
+    ChevronDown,
+    ClipboardList,
+    KeyRound,
+    LayoutDashboard,
+    Link2,
+    ScrollText,
+    Settings as SettingsIcon,
+    Shield,
+    UserRound,
+    Users,
+    X,
+} from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import {
-  ChevronDown,
-  BriefcaseBusiness,
-  CalendarCheck,
-  ClipboardList,
-  KeyRound,
-  LayoutDashboard,
-  Link2,
-  ScrollText,
-  Settings as SettingsIcon,
-  Shield,
-  X,
-  UserRound,
-  Users,
-} from "lucide-react"
-import { NavigationHeader } from "@/components/sidebar/navigation-header"
-import { Button } from "@workspace/ui/components/button"
-import { cn } from "@/lib/utils"
+import * as React from "react"
 
 const MainTop = [
   {
@@ -39,6 +39,11 @@ const MainBottom = [
   {
     href: "/attendance",
     label: "Attendance Management",
+    icon: ClipboardList,
+  },
+  {
+    href: "/companymanagement",
+    label: "Company Management",
     icon: ClipboardList,
   },
 ]

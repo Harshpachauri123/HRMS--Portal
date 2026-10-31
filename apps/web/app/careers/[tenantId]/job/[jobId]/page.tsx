@@ -1,4 +1,4 @@
-import PublicJobApplyPage from "@/components/candidatemanagement/careers/[tenantId]/job/[jobId]/page"
+import PublicJobApplyPage from "@/components/Hr/candidatemanagement/careers/[tenantId]/job/[jobId]/page";
 
 type CareerApplicationPageProps = {
   params: Promise<{ tenantId: string; jobId: string }>

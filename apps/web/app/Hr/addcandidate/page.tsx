@@ -1,4 +1,4 @@
-import AddCandidatePage from "@/components/candidatemanagement/addcandidate/page"
+import AddCandidatePage from "@/components/Hr/candidatemanagement/addcandidate/page"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {

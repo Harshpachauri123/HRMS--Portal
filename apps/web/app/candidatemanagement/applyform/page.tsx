@@ -1,4 +1,4 @@
-import CopyLinkPage from "@/components/candidatemanagement/applyform/page"
+import CopyLinkPage from "@/components/Hr/candidatemanagement/applyform/page"
 
 import { Metadata } from "next"
 

@@ -1,4 +1,4 @@
-import StaffPage from "@/components/staff/page";
+import StaffPage from "@/components/Hr/staff/page";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
