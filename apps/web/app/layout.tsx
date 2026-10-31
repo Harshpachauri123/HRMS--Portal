@@ -21,9 +21,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <Toaster>
-          <AppShell>{children}</AppShell>
-        </Toaster>
+        <AppShell>
+          {children}
+        </AppShell>
+        <Toaster />
       </body>
     </html>
   );

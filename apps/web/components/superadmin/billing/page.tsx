@@ -51,10 +51,10 @@ export default function CompanyBillingPage() {
   const [companies, setCompanies] = useState(initialCompanies);
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Calculator States with Company Sync
-  const [calcCompanyId, setCalcCompanyId] = useState(initialCompanies[0].id);
-  const [calcUsers, setCalcUsers] = useState(initialCompanies[0].activeUsers);
-  const [calcRate, setCalcRate] = useState(initialCompanies[0].ratePerUser);
+  // Calculator States with Safe Fallbacks
+  const [calcCompanyId, setCalcCompanyId] = useState(initialCompanies[0]?.id || "");
+  const [calcUsers, setCalcUsers] = useState(initialCompanies[0]?.activeUsers || 0);
+  const [calcRate, setCalcRate] = useState(initialCompanies[0]?.ratePerUser || 49);
 
   // Modal States for Actions
   const [emailModalOpen, setEmailModalOpen] = useState(false);
@@ -160,7 +160,7 @@ export default function CompanyBillingPage() {
         </div>
       </div>
 
-      {/* 2. Pricing Tiers Cards Section (Updated with image features) */}
+      {/* 2. Pricing Tiers Cards Section */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
         
         {/* Basic Plan */}
@@ -199,7 +199,7 @@ export default function CompanyBillingPage() {
           </button>
         </div>
 
-        {/* Pro Plan (Highlighted as Most Popular) */}
+        {/* Pro Plan */}
         <div className="bg-white rounded-3xl p-8 border-2 border-[#f24e1e] shadow-lg relative flex flex-col justify-between transform md:-translate-y-1">
           <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#f24e1e] text-white text-[11px] font-bold px-4 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 shadow-sm">
             <span>⚡ Most Popular</span>
@@ -353,7 +353,6 @@ export default function CompanyBillingPage() {
 
         <div className="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/15 grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
           
-          {/* Company Selector Dropdown */}
           <div className="space-y-1">
             <label className="text-[10px] font-bold uppercase tracking-wider text-slate-300">Select Company</label>
             <select
@@ -369,7 +368,6 @@ export default function CompanyBillingPage() {
             </select>
           </div>
 
-          {/* Active Users Input */}
           <div className="space-y-1">
             <label className="text-[10px] font-bold uppercase tracking-wider text-slate-300">Active Users Count</label>
             <input 
@@ -380,7 +378,6 @@ export default function CompanyBillingPage() {
             />
           </div>
 
-          {/* Rate per User Selector */}
           <div className="space-y-1">
             <label className="text-[10px] font-bold uppercase tracking-wider text-slate-300">Rate per User (₹)</label>
             <select 
@@ -394,7 +391,6 @@ export default function CompanyBillingPage() {
             </select>
           </div>
 
-          {/* Calculated Output & Confirm Action */}
           <div className="flex items-center justify-between md:justify-end gap-4 pt-2 md:pt-0">
             <div>
               <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-300 block">Total Payout</span>
@@ -452,30 +448,25 @@ export default function CompanyBillingPage() {
                 return (
                   <tr key={item.id} className="hover:bg-slate-50/80 transition-colors">
                     
-                    {/* Company Name */}
                     <td className="py-4 font-bold text-slate-900">
                       {item.companyName}
                     </td>
 
-                    {/* Plan Type & Rate */}
                     <td className="py-4">
                       <span className="text-slate-900 font-semibold">{item.planType}</span>
                       <span className="block text-[11px] text-slate-400">₹{item.ratePerUser}/user/mo</span>
                     </td>
 
-                    {/* Active Users */}
                     <td className="py-4">
                       <span className="font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg">
                         {item.activeUsers} Users
                       </span>
                     </td>
 
-                    {/* Monthly Payout */}
                     <td className="py-4 font-black text-slate-900">
                       ₹{monthlyPayout.toLocaleString("en-IN")}
                     </td>
 
-                    {/* Next Billing Date (With Calendar/Editor) */}
                     <td className="py-4 text-slate-600 text-xs">
                       {isEditingDate ? (
                         <div className="flex items-center gap-2">
@@ -507,7 +498,6 @@ export default function CompanyBillingPage() {
                       )}
                     </td>
 
-                    {/* Payment Status */}
                     <td className="py-4">
                       <span
                         className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${
@@ -525,9 +515,7 @@ export default function CompanyBillingPage() {
                       </span>
                     </td>
 
-                    {/* Actions: Mail, Permanent Delete */}
                     <td className="py-4 text-right space-x-2">
-                      {/* Send Mail Button */}
                       <button
                         onClick={() => handleOpenEmailModal(item)}
                         className="p-2 bg-indigo-50 hover:bg-indigo-600 hover:text-white text-indigo-600 rounded-xl transition-all"
@@ -536,7 +524,6 @@ export default function CompanyBillingPage() {
                         <Mail className="w-4 h-4" />
                       </button>
 
-                      {/* Permanent Delete Button */}
                       <button
                         onClick={() => handleDeleteCompany(item.id, item.companyName)}
                         className="p-2 bg-rose-50 hover:bg-rose-600 hover:text-white text-rose-600 rounded-xl transition-all"
