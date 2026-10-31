@@ -29,7 +29,7 @@ const MainTop = [
     icon: LayoutDashboard,
   },
   {
-    href: "/staff",
+    href: "/Hr/staff",
     label: "Employees Management",
     icon: ClipboardList,
   },
@@ -79,17 +79,17 @@ function SidebarContentBody({
   const inCandidateManagement = pathname.startsWith("/candidatemanagement")
   const candidateManagementSections = [
     {
-      href: "/candidatemanagement/candidateprofile",
+      href: "/Hr/candidatemanagement/candidateprofile",
       label: "Candidate Dashboard",
       icon: LayoutDashboard,
     },
     {
-      href: "/candidatemanagement/open-positions",
+      href: "/Hr/candidatemanagement/open-positions",
       label: "Open Position",
       icon: BriefcaseBusiness,
     },
     {
-      href: "/candidatemanagement/applyform",
+      href: "/Hr/candidatemanagement/applyform",
       label: "Apply Form",
       icon: Link2,
     },

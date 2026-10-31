@@ -545,7 +545,7 @@ export default function CandidateProfile() {
               </p>
             </div>
             <Link
-              href="/addcandidate"
+              href="/Hr/candidatemanagement/addcandidate"
               className="inline-flex h-11 cursor-pointer items-center justify-center gap-2 self-start rounded-xl bg-white px-5 text-sm font-bold text-emerald-950 shadow-lg shadow-black/10 transition hover:bg-emerald-50 sm:self-auto"
             >
               Add Candidate
