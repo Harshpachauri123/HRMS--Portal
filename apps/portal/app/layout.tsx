@@ -7,7 +7,7 @@ import Footer from "@/components/Footer";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Teamora - AI-first HR software for every business",
+  title: "Teamora -HR software for every business",
   description: "Streamline all your HR processes and deliver exceptional employee experiences with Teamora—cloud-based AI HR software.",
   icons: {
     icon: [

@@ -370,17 +370,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         >
           {[
             {
-              href: "/candidatemanagement/candidateprofile",
+              href: "/Hr/candidatemanagement/candidateprofile",
               label: "Candidate Dashboard",
               icon: LayoutDashboard,
             },
             {
-              href: "/candidatemanagement/open-positions",
+              href: "/Hr/candidatemanagement/open-positions",
               label: "Open Position",
               icon: BriefcaseBusiness,
             },
             {
-              href: "/candidatemanagement/applyform",
+              href: "/Hr/candidatemanagement/applyform",
               label: "Apply Form",
               icon: Link2,
             },
@@ -469,7 +469,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           Dashboard
         </Link>
         <Link
-          href="/staff"
+          href="/Hr/staff"
           onClick={() => setMobileSubmenu(null)}
           aria-label="Employee management"
           aria-current={pathname.startsWith("/staff") ? "page" : undefined}
