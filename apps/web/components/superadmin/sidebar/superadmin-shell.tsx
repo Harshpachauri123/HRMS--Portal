@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { LayoutDashboard, Menu, UserRound, X, Building2, FileText, CreditCard } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -101,7 +102,7 @@ export function SuperAdminShell({ children }: { children: React.ReactNode }) {
       )}
       <div className="lg:pl-72">
         <header className="sticky top-0 z-20 flex min-h-18 items-center justify-between border-b border-[#f1cbb5] bg-[#fce9df] px-4 py-3 sm:px-6 lg:px-7">
-          <div className="flex min-w-0 items-center gap-3">
+          <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
             <button
               aria-label="Open navigation"
               onClick={() => setOpen(true)}
@@ -109,11 +110,21 @@ export function SuperAdminShell({ children }: { children: React.ReactNode }) {
             >
               <Menu className="h-5 w-5" />
             </button>
+            <div className="flex h-9 w-[100px] shrink-0 items-center overflow-hidden rounded-lg border border-[#f0c8b1] bg-[#fff1e7] p-0.5 shadow-sm sm:hidden">
+              <Image
+                src="/mobileteamora.png"
+                alt="Teamora Logo"
+                width={144}
+                height={48}
+                className="h-full w-full object-contain"
+                priority
+              />
+            </div>
             <div className="min-w-0">
-              <h1 className="truncate text-base leading-tight font-bold text-[#202020] sm:text-2xl">
-                HR Pulse - Connecting People, Powering Progress
+              <h1 className="truncate text-xs leading-tight font-bold text-emerald-600 sm:text-2xl">
+                Teamora , People First, Progress Together.
               </h1>
-              <p className="truncate text-sm font-medium text-slate-600">
+              <p className="truncate text-[11px] font-medium text-slate-600 sm:text-sm">
                 Super Admin - Company Management Portal
               </p>
             </div>
@@ -136,6 +147,39 @@ export function SuperAdminShell({ children }: { children: React.ReactNode }) {
           {children}
         </main>
       </div>
+      <nav
+        aria-label="Super Admin mobile navigation"
+        className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-4 border-t border-[#f1cbb5] bg-[#fff9f5]/95 px-2 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] shadow-[0_-8px_24px_rgba(70,35,20,0.08)] backdrop-blur lg:hidden"
+      >
+        {links.map(({ href, label, icon: Icon }) => {
+          const active = pathname === href
+          const shortLabel =
+            href === "/superadmin/registercompany"
+              ? "Register"
+              : href === "/superadmin/onboardingcompany"
+                ? "Onboard"
+                : href === "/superadmin/billing"
+                  ? "Billing"
+                  : "Dashboard"
+
+          return (
+            <Link
+              key={href}
+              href={href}
+              aria-current={active ? "page" : undefined}
+              className={cn(
+                "flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl px-1 text-center text-[10px] leading-tight font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-[#eb5b25] focus-visible:outline-none",
+                active
+                  ? "bg-[#ffede3] text-[#c74617]"
+                  : "text-slate-600 hover:bg-white/70 hover:text-[#c74617]"
+              )}
+            >
+              <Icon className="h-5 w-5" aria-hidden="true" />
+              <span>{shortLabel}</span>
+            </Link>
+          )
+        })}
+      </nav>
     </div>
   )
 }

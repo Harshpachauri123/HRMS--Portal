@@ -68,6 +68,7 @@ export default function FourthPage() {
         <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-12">
           {tabContent.map((tab, idx) => (
             <button
+            suppressHydrationWarning
               key={idx}
               onClick={() => setActiveTab(tab)}
               className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 cursor-pointer ${

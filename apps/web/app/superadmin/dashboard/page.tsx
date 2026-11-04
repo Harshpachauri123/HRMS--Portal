@@ -4,8 +4,9 @@ import type { Metadata } from "next";
 
 
 export const metadata: Metadata = {
-  title: "Suscription & Billing Fields  - HRMS Portal",
-  description: "View and manage employee attendance records and punch activity.",
+  title: "Super Admin Dashboard - HRMS Portal",
+  description:
+    "View company registration, onboarding, and operational metrics.",
 };
 
 export default function Page() {

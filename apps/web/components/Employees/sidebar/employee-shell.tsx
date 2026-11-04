@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { LayoutDashboard, Menu, UserRound, X } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -99,7 +100,7 @@ export function EmployeeShell({ children }: { children: React.ReactNode }) {
       )}
       <div className="lg:pl-72">
         <header className="sticky top-0 z-20 flex min-h-18 items-center justify-between border-b border-[#f1cbb5] bg-[#fce9df] px-4 py-3 sm:px-6 lg:px-7">
-          <div className="flex min-w-0 items-center gap-3">
+          <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
             <button
               aria-label="Open navigation"
               onClick={() => setOpen(true)}
@@ -107,11 +108,21 @@ export function EmployeeShell({ children }: { children: React.ReactNode }) {
             >
               <Menu className="h-5 w-5" />
             </button>
+            <div className="flex h-9 w-[100px] shrink-0 items-center overflow-hidden rounded-lg border border-[#f0c8b1] bg-[#fff1e7] p-0.5 shadow-sm sm:hidden">
+              <Image
+                src="/mobileteamora.png"
+                alt="Teamora Logo"
+                width={144}
+                height={48}
+                className="h-full w-full object-contain"
+                priority
+              />
+            </div>
             <div className="min-w-0">
-              <h1 className="truncate text-base leading-tight font-bold text-[#202020] sm:text-2xl">
-                HR Pulse - Connecting People, Powering Progress
+              <h1 className="truncate text-xs leading-tight font-bold text-emerald-600 sm:text-2xl">
+                Teamora , People First, Progress Together.
               </h1>
-              <p className="truncate text-sm font-medium text-slate-600">
+              <p className="truncate text-[11px] font-medium text-slate-600 sm:text-sm">
                 Employee Self Service - HRMS Portal
               </p>
             </div>

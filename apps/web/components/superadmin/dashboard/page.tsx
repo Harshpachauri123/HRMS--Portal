@@ -158,6 +158,15 @@ import React from "react";
 import { Building2, CheckCircle2, AlertCircle, TrendingUp, Users, Calendar } from "lucide-react";
 import Link from "next/link";
 
+const growthData = [
+  { month: "May", value: 32 },
+  { month: "Jun", value: 38 },
+  { month: "Jul", value: 35 },
+  { month: "Aug", value: 47 },
+  { month: "Sep", value: 44 },
+  { month: "Oct", value: 58 },
+]
+
 export default function DashboardPage() {
   return (
     <div className="space-y-8">
@@ -178,7 +187,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Stats Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
         
         {/* Card 1: Total Registered Companies */}
         <div className="relative overflow-hidden rounded-3xl p-6 bg-gradient-to-br from-white via-indigo-50/30 to-indigo-100/40 border border-indigo-100/80 shadow-sm hover:shadow-md transition-all">
@@ -256,20 +265,97 @@ export default function DashboardPage() {
       </div>
 
       {/* Lower Section / Quick Insights or Recent Activity Preview */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         
         {/* Left 2 Columns: Overview Chart / Summary */}
-        <div className="lg:col-span-2 bg-white rounded-3xl p-6 border border-slate-100 shadow-sm">
+        <div className="xl:col-span-2 bg-white rounded-3xl p-6 border border-slate-100 shadow-sm">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-base font-bold text-slate-900">Company Growth Overview</h3>
             <span className="text-xs font-semibold px-3 py-1 bg-slate-100 text-slate-600 rounded-full">
               Monthly Active
             </span>
           </div>
-          <div className="h-64 flex items-center justify-center border-2 border-dashed border-slate-100 rounded-2xl bg-slate-50/50">
-            <p className="text-sm font-medium text-slate-400">
-              [Yahan par company onboarding graph ya analytics chart integrate kar sakte hain]
-            </p>
+          <div
+            role="img"
+            aria-label="Monthly active companies increased from 32 in May to 58 in October"
+            className="h-64 rounded-2xl bg-slate-50/50 px-3 py-4 sm:px-5"
+          >
+            <div className="flex h-full">
+              <div
+                aria-hidden="true"
+                className="flex flex-col justify-between pb-7 pr-3 text-[10px] font-medium text-slate-400"
+              >
+                <span>60</span>
+                <span>45</span>
+                <span>30</span>
+                <span>15</span>
+                <span>0</span>
+              </div>
+              <div className="relative flex min-w-0 flex-1 flex-col">
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-x-0 top-0 bottom-7 flex flex-col justify-between"
+                >
+                  {[0, 1, 2, 3, 4].map((line) => (
+                    <span
+                      key={line}
+                      className="border-t border-dashed border-slate-200"
+                    />
+                  ))}
+                </div>
+                <svg
+                  viewBox="0 0 600 180"
+                  preserveAspectRatio="none"
+                  aria-hidden="true"
+                  className="relative h-full w-full overflow-visible"
+                >
+                  <defs>
+                    <linearGradient id="company-growth-fill" x1="0" x2="0" y1="0" y2="1">
+                      <stop offset="0%" stopColor="#10b981" stopOpacity=".22" />
+                      <stop offset="100%" stopColor="#10b981" stopOpacity="0" />
+                    </linearGradient>
+                  </defs>
+                  <path
+                    d="M0 100 L120 85 L240 92.5 L360 62.5 L480 70 L600 35 L600 180 L0 180 Z"
+                    fill="url(#company-growth-fill)"
+                  />
+                  <path
+                    d="M0 100 L120 85 L240 92.5 L360 62.5 L480 70 L600 35"
+                    fill="none"
+                    stroke="#059669"
+                    strokeWidth="4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    vectorEffect="non-scaling-stroke"
+                  />
+                  {growthData.map((point, index) => {
+                    const x = index * 120
+                    const y = 180 - point.value * 2.5
+
+                    return (
+                      <circle
+                        key={point.month}
+                        cx={x}
+                        cy={y}
+                        r="5"
+                        fill="#fff"
+                        stroke="#059669"
+                        strokeWidth="3"
+                        vectorEffect="non-scaling-stroke"
+                      />
+                    )
+                  })}
+                </svg>
+                <div
+                  aria-hidden="true"
+                  className="grid grid-cols-6 pt-2 text-center text-[10px] font-semibold text-slate-500"
+                >
+                  {growthData.map((point) => (
+                    <span key={point.month}>{point.month}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 

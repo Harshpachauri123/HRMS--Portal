@@ -294,6 +294,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       : "bg-slate-50"
 
   if (
+    pathname.startsWith("/superadmin") ||
     pathname.startsWith("/employee") ||
     pathname.startsWith("/sign-in") ||
     pathname.startsWith("/sign-up") ||
