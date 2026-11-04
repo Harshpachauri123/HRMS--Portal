@@ -4,11 +4,16 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
 
-export default function FourthPage() {
-  const [activeTab, setActiveTab] = useState(0);
+type TabContent = {
+  title: string;
+  heading: string;
+  description: string;
+  bannerText: string;
+};
 
+export default function FourthPage() {
   // Tabs data with unique content for each category
-  const tabContent = [
+  const tabContent: [TabContent, ...TabContent[]] = [
     {
       title: "Start-ups",
       heading: "Agile HR for high-growth Start-ups",
@@ -41,6 +46,8 @@ export default function FourthPage() {
     },
   ];
 
+  const [activeTab, setActiveTab] = useState<TabContent>(tabContent[0]);
+
   return (
     <section className="w-full bg-[#FAF9F5] py-20 px-4 sm:px-6 lg:px-8 text-slate-900 overflow-hidden">
       <div className="max-w-7xl mx-auto">
@@ -62,9 +69,9 @@ export default function FourthPage() {
           {tabContent.map((tab, idx) => (
             <button
               key={idx}
-              onClick={() => setActiveTab(idx)}
+              onClick={() => setActiveTab(tab)}
               className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 cursor-pointer ${
-                activeTab === idx
+                activeTab === tab
                   ? 'bg-[#033022] text-white shadow-md'
                   : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
               }`}
@@ -96,15 +103,15 @@ export default function FourthPage() {
             <div className="bg-white rounded-3xl p-8 sm:p-10 shadow-xl border border-slate-200/80 transition-all duration-300 relative">
               
               <div className="inline-block px-3 py-1 bg-emerald-100 text-emerald-800 rounded-md text-xs font-bold mb-4 uppercase tracking-wider">
-                {tabContent[activeTab].title} Solutions
+                {activeTab.title} Solutions
               </div>
 
               <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                {tabContent[activeTab].heading}
+                {activeTab.heading}
               </h3>
 
               <p className="mt-4 text-slate-600 text-base leading-relaxed">
-                {tabContent[activeTab].description}
+                {activeTab.description}
               </p>
 
               <div className="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between">
@@ -125,12 +132,12 @@ export default function FourthPage() {
 
             {/* Pagination Dots Indicator */}
             <div className="flex items-center justify-center gap-2 mt-6">
-              {tabContent.map((_, idx) => (
+              {tabContent.map((tab, idx) => (
                 <button
                   key={idx}
-                  onClick={() => setActiveTab(idx)}
+                  onClick={() => setActiveTab(tab)}
                   className={`h-2.5 rounded-full transition-all duration-300 ${
-                    activeTab === idx ? 'w-8 bg-[#033022]' : 'w-2.5 bg-slate-300'
+                    activeTab === tab ? 'w-8 bg-[#033022]' : 'w-2.5 bg-slate-300'
                   }`}
                   aria-label={`Go to slide ${idx + 1}`}
                 />
