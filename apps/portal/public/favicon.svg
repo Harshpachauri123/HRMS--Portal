@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="teamora" x1="15" y1="50" x2="85" y2="50" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#008FD5" />
+      <stop offset="1" stop-color="#00B875" />
+    </linearGradient>
+  </defs>
+  <g transform="translate(-6 -6) scale(1.12)">
+    <circle cx="32" cy="22" r="7" fill="#008FD5" />
+    <circle cx="50" cy="17" r="8" fill="#00B875" />
+    <circle cx="68" cy="22" r="7" fill="#00B875" />
+    <path
+      d="M22 36c5 0 19 0 28 12 9-12 23-12 28-12s7 5 3 9c-8 8-21 11-23 21v18c0 4-16 4-16 0V66c-2-10-15-13-23-21-4-4-2-9 3-9Z"
+      fill="url(#teamora)"
+    />
+  </g>
+</svg>
