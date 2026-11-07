@@ -784,7 +784,7 @@ export default function CandidateProfile() {
                             </div>
                             <div className="flex flex-wrap items-center gap-2">
                               <Link
-                                href={`/addcandidate?edit=${encodeURIComponent(editId)}`}
+                                href={`/Hr/candidatemanagement/addcandidate?edit=${encodeURIComponent(editId)}`}
                                 onClick={() => openCandidateEditor(candidate)}
                                 aria-label={`Edit ${candidate.name}`}
                                 className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-sky-200 bg-white text-sky-700 transition hover:bg-sky-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"

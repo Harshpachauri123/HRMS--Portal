@@ -278,7 +278,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const hasFormPageBackground =
     [
-      "/addcandidate",
+      "/Hr/candidatemanagement/addcandidate",
       "/addstaff",
       "/companymanagement",
       "/profile",

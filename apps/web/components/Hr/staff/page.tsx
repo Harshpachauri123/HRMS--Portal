@@ -542,7 +542,7 @@ export default function StaffPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.08, duration: 0.4 }}
             whileHover={{ y: -3 }}
-            className="relative overflow-hidden rounded-2xl border border-indigo-200/80 bg-gradient-to-br from-indigo-200 via-indigo-100 to-blue-200 p-5 shadow-lg shadow-indigo-900/10"
+            className="relative overflow-hidden rounded-2xl border border-indigo-200/80 bg-linear-to-br from-indigo-200 via-indigo-100 to-blue-200 p-5 shadow-lg shadow-indigo-900/10"
           >
             <div className="pointer-events-none absolute -top-10 -right-8 h-32 w-32 rounded-full bg-indigo-500/20 blur-2xl" />
             <div className="flex items-center justify-between">
@@ -695,7 +695,7 @@ export default function StaffPage() {
                             </span>
                           </button>
                           <Link
-                            href={`/addstaff?edit=${encodeURIComponent(editId)}`}
+                            href={`/Hr/addstaff?edit=${encodeURIComponent(editId)}`}
                             onClick={() => openEmployeeEditor(employee)}
                             aria-label={`Edit ${employee.name}`}
                             className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-indigo-200 bg-white/80 text-indigo-700 shadow-sm transition hover:bg-indigo-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"

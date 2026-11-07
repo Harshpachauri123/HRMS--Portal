@@ -135,6 +135,7 @@ export default function FourthPage() {
             <div className="flex items-center justify-center gap-2 mt-6">
               {tabContent.map((tab, idx) => (
                 <button
+                  suppressHydrationWarning
                   key={idx}
                   onClick={() => setActiveTab(tab)}
                   className={`h-2.5 rounded-full transition-all duration-300 ${

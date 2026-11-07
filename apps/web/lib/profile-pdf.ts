@@ -10,9 +10,9 @@ const muted = rgb(0.4, 0.46, 0.54)
 const accent = rgb(0.02, 0.48, 0.39)
 const line = rgb(0.87, 0.9, 0.93)
 
-function drawHeader(page: PDFPage, logo: Awaited<ReturnType<PDFDocument["embedPng"]>>, title: string, name: string, id: string, regular: PDFFont, bold: PDFFont) {
+function drawHeader(page: PDFPage, title: string, name: string, id: string, regular: PDFFont, bold: PDFFont) {
   page.drawRectangle({ x: 0, y: PAGE_HEIGHT - 138, width: PAGE_WIDTH, height: 138, color: rgb(0.96, 0.98, 0.97) })
-  page.drawImage(logo, { x: MARGIN, y: PAGE_HEIGHT - 71, width: 113, height: 35 })
+  page.drawText("HR Pulse", { x: MARGIN, y: PAGE_HEIGHT - 67, size: 15, font: bold, color: accent })
   page.drawText("PEOPLE • CULTURE • PROGRESS", { x: 165, y: PAGE_HEIGHT - 52, size: 8, font: bold, color: accent })
   page.drawText(title.toUpperCase(), { x: MARGIN, y: PAGE_HEIGHT - 96, size: 16, font: bold, color: ink })
   page.drawText(name || "—", { x: MARGIN, y: PAGE_HEIGHT - 119, size: 10, font: regular, color: muted, maxWidth: 365 })
@@ -60,19 +60,14 @@ export async function createProfilePdf({ title, name, id, sections, documents, d
   const pdf = await PDFDocument.create()
   const regular = await pdf.embedFont(StandardFonts.Helvetica)
   const bold = await pdf.embedFont(StandardFonts.HelveticaBold)
-  const logoBytes = await fetch("/Hr%20Pulse.png").then((response) => {
-    if (!response.ok) throw new Error("HR Pulse logo could not be loaded")
-    return response.arrayBuffer()
-  })
-  const logo = await pdf.embedPng(logoBytes)
   let page = pdf.addPage([PAGE_WIDTH, PAGE_HEIGHT])
-  drawHeader(page, logo, title, name, id, regular, bold)
+  drawHeader(page, title, name, id, regular, bold)
   let y = PAGE_HEIGHT - 165
   for (const section of sections) {
     const estimatedHeight = 39 + Math.ceil(section.fields.length / 2) * 44 + 7
     if (y - estimatedHeight < 55) {
       page = pdf.addPage([PAGE_WIDTH, PAGE_HEIGHT])
-      drawHeader(page, logo, title, name, id, regular, bold)
+      drawHeader(page, title, name, id, regular, bold)
       y = PAGE_HEIGHT - 165
     }
     y = drawSection(page, section, y, regular, bold)
@@ -80,7 +75,7 @@ export async function createProfilePdf({ title, name, id, sections, documents, d
   const docHeight = 48 + Math.max(1, documents.length) * 20
   if (y - docHeight < 55) {
     page = pdf.addPage([PAGE_WIDTH, PAGE_HEIGHT])
-    drawHeader(page, logo, title, name, id, regular, bold)
+    drawHeader(page, title, name, id, regular, bold)
     y = PAGE_HEIGHT - 165
   }
   page.drawRectangle({ x: MARGIN, y: y - 8, width: PAGE_WIDTH - 2 * MARGIN, height: 23, color: rgb(0.93, 0.97, 0.95) })

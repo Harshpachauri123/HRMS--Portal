@@ -148,7 +148,7 @@ export default function DashboardPage() {
                 {today}
               </span>
               <Link
-                href="/addstaff"
+                href="/Hr/addstaff"
                 className="inline-flex h-10 items-center gap-2 rounded-xl bg-white px-4 text-sm font-semibold text-indigo-950 shadow-lg shadow-black/10 transition hover:bg-indigo-50 focus-visible:ring-4 focus-visible:ring-white/20 focus-visible:outline-none"
               >
                 <UserPlus className="h-4 w-4" />
@@ -366,13 +366,17 @@ export default function DashboardPage() {
           </p>
           <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {[
-              { label: "Add Employee", icon: UserPlus, href: "/addstaff" },
+              { label: "Add Employee", icon: UserPlus, href: "/Hr/addstaff" },
               {
                 label: "Create Job Opening",
                 icon: PlusCircle,
                 href: undefined,
               },
-              { label: "Add Candidate", icon: UserPlus, href: "/addcandidate" },
+              {
+                label: "Add Candidate",
+                icon: UserPlus,
+                href: "/Hr/candidatemanagement/addcandidate",
+              },
               {
                 label: "Generate Offer Letter",
                 icon: FileSignature,

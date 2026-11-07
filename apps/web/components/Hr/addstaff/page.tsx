@@ -503,9 +503,9 @@ export default function AddStaffPage() {
         <p className="mt-2 text-sm text-slate-600">
           This demo record is held only for the current session. Return to the employee list and try again.
         </p>
-        <Link href="/staff" className="mt-4 inline-flex font-semibold text-lime-700 hover:underline">
+        {/* <Link href="/Hr/staff" className="mt-4 inline-flex font-semibold text-lime-700 hover:underline">
           Back to employees
-        </Link>
+        </Link> */}
       </main>
     )
   }
@@ -527,7 +527,7 @@ export default function AddStaffPage() {
           transition={{ duration: 0.25 }}
         >
           <Link
-            href="/staff"
+            href="/Hr/staff"
             className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 transition hover:text-lime-700"
           >
             <ArrowLeft className="h-4 w-4" />
